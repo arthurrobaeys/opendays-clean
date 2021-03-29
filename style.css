@@ -3,6 +3,10 @@ body {
   font-weight: bold;
   margin: 0px;
   overflow: hidden;
+  /* background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(105,130,255,1) 0%, rgba(133,187,255,1) 100%); */
+  background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(49,82,244,1) 0%, rgba(133,187,255,1) 100%);
 }
 
 .ui {

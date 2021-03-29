@@ -51,13 +51,19 @@ animate();
 // FUNCTIONS 		
 function init() 
 {
+
+	// OFFSET FUNCTION
+	const randomOffsetVal = (value) => {
+	  return value + Math.floor(Math.random() * 10000) * 0.000001;
+	}
+
 	let loader = new THREE.TextureLoader();
 
 	// SCENE
 	scene = new THREE.Scene();
 	// CAMERA
 	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 5000;
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
 
@@ -66,8 +72,16 @@ function init()
 		renderer = new THREE.WebGLRenderer( {antialias:true, alpha: true} );
 	else
 		renderer = new THREE.CanvasRenderer(); 
-		renderer.setClearColor(0x99ccff);
+
+	//LOGGING PERFORMANCE
+	console.log("Scene polycount:", renderer.info.render.triangles)
+	console.log("Active Drawcalls:", renderer.info.render.calls)
+	console.log("Textures in Memory", renderer.info.memory.textures)
+	console.log("Geometries in Memory", renderer.info.memory.geometries)
+		
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//blurring off but a big drop in fps
+	//renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMapSoft = true;
 	container = document.getElementById( 'ThreeJS' );
@@ -88,6 +102,7 @@ get: function(){
 	// EVENTS
 	THREEx.WindowResize(renderer, camera);
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+
 	// STATS
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -97,13 +112,13 @@ get: function(){
 
 	// LIGHT
 
-	let ambient = new THREE.AmbientLight(0x555555, 0.2);
+	let ambient = new THREE.AmbientLight(0x555555, .5);
     scene.add(ambient);
 
-	var light = new THREE.PointLight(0xffffff, .5, 0, 2);
+	var light = new THREE.PointLight(0xffffff, .6, 0, 2);
 	light.position.set(0,500,0);
 
-	var faceLight = new THREE.DirectionalLight(0xffffff, .1);
+	var faceLight = new THREE.DirectionalLight(0xffffff, .06);
 	faceLight.position.set(0,100,500);
 
 	var directionalLight = new THREE.DirectionalLight( 0xffffff, 1, 0, 2 );
@@ -125,14 +140,14 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	scene.add(faceLight);
 
 	const cameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-	scene.add(cameraHelper);
+	//scene.add(cameraHelper);
 
 	// FLOOR
 	floorTexture = loader.load( "Three.js/images/tegels-small@4x.png" );
 	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
 	floorTexture.repeat.set( 10, 10 );
 	var floorMaterial = new THREE.MeshPhongMaterial( { map: floorTexture, side: THREE.DoubleSide } );
-	var floorGeometry = new THREE.PlaneGeometry(15000, 15000, 10, 10);
+	var floorGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 10, 10);
 	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 	floor.receiveShadow = true;
 	floor.position.y = -0.5;
@@ -141,24 +156,25 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 
 	// SKY
 
-	cloudGeo = new THREE.PlaneGeometry(2360,984);
+	//renderer.setClearColor(0x99ccff); //light blue sky
+	cloudGeo = new THREE.PlaneBufferGeometry(2360,984);
 
 
 	const texMap = loader.load('Three.js/images/smoke.png');
-	const testMat = new THREE.MeshLambertMaterial({map: texMap, transparent: true});
+	const testMat = new THREE.MeshBasicMaterial({map: texMap, transparent: true});
 	
 
- 	for(let p=0; p<20; p++) {
+ 	for(let p=0; p<50; p++) {
 	let testCloud = new THREE.Mesh(cloudGeo, testMat);
    testCloud.position.set(
      Math.random()*10000 -5000,
-     Math.random()*3000 + 1000,
-     Math.random()*500-4000
+     Math.random()*2000 + 200,
+     randomOffsetVal(Math.random()*2000-3000)
    );
-   testCloud.rotation.x = 1.16;
-   testCloud.rotation.y = -0.12;
-   testCloud.rotation.z = Math.random()*2*Math.PI;
-   testCloud.material.opacity = 0.55;
+//    testCloud.rotation.x = 1.16;
+//    testCloud.rotation.y = -0.12;
+//    testCloud.rotation.z = Math.random()*2*Math.PI;
+   testCloud.material.opacity = 0.30;
    cloudParticles.push(testCloud);
    scene.add(testCloud);
  }
@@ -219,24 +235,24 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 // 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
 // ];
 
-	cardCamera = new THREE.CubeCamera(1, 20000, 512);
-    cardCamera.position.set(0, 100, 0);
+	cardCamera = new THREE.CubeCamera(1, 5000, 512);
+    cardCamera.position.set(0, 160, 0);
     scene.add(cardCamera);
 
-	cardGeo = new THREE.BoxGeometry( 108, 192, 4, 4 );
-	cardMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, overdraw: true, envMap: cardCamera.renderTarget.texture, shininess: shine, reflectivity: 0.4, specular:0xffffff, combine: THREE.MultiplyOperation,} );
+	cardGeo = new THREE.BoxBufferGeometry( 108, 192, 4, 4 );
+	cardMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, envMap: cardCamera.renderTarget.texture, shininess: shine, reflectivity: 0.4, specular:0xffffff} );
 	card = new THREE.Mesh( cardGeo, cardMaterial );
 
 	card.position.set(0,100,0);
 
 	card.castShadow = true;
-	card.receiveShadow = true;
+ 	 card.receiveShadow = true;
 	scene.add(card);
 	directionalLight.target = card;
 	faceLight.target = card;
 
-	
-	camera.position.set(0,100,500);
+
+	camera.position.set(0,150,500);
 	camera.lookAt(card.position);
 
 	var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
@@ -256,10 +272,10 @@ function onDocumentMouseDown(event){
 	video.play();
 	rotation = false;
 	card.rotation.y = Math.PI;
-	var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:200}, 500, TWEEN.Easing.ElasticIn).start();
+	var tween = new TWEEN.Tween(card.position).to({x: 0, y:120, z:200}, 500, TWEEN.Easing.ElasticIn).start();
 	tween.easing(TWEEN.Easing.Quadratic.In);
 	card.material = new THREE.MeshPhongMaterial( { map: videoTexture, overdraw: true} );
-	faceLight.intensity = 0.35;
+	faceLight.intensity = 0.2;
 }
 	}
 }
@@ -277,11 +293,19 @@ function animate(time)
 		video.pause();
 	}
 
-    requestAnimationFrame( animate );
-	if(rotation){
+		//rotation card
+		if(rotation){
 		card.rotation.y = rot;
 	}
 	floorTexture.offset.y -= .008;
+
+	//cloud movement
+	cloudParticles.forEach(p => {
+      p.position.x -=0.5;
+	  p.rotation.z -= 0.0001;
+   });
+
+    requestAnimationFrame( animate );
 	render();		
 	update();
 }
@@ -315,16 +339,8 @@ function render(time)
 		cardMaterial.needsUpdate = true;
 	}
 
-	cloudParticles.forEach(p => {
-      p.position.x -=1;
-	  p.rotation.z -= 0.001;
-   });
-
-	
-
-
 	renderer.render( scene, camera );
-	cardCamera.updateCubeMap( renderer, scene );
+	//cardCamera.updateCubeMap( renderer, scene );
 }
 
 </script>
