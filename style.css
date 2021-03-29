@@ -12,6 +12,7 @@ body {
 .ui {
   position: absolute;
   z-index: 2;
+  width: 100%;
 }
 
 #skyVideo {
@@ -21,4 +22,22 @@ body {
   min-width: 100%;
   min-height: 100%;
   z-index: -1;
+}
+
+.topbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mute-btn {
+  margin-right: 2rem;
+  width: 30px;
+  margin-left: 1rem;
+}
+
+.mute-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

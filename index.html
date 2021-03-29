@@ -21,11 +21,17 @@
 
 
 <div class="ui">
-<ul class="list">
-	<li class="listitem">click card: play/pause</li>
-	<li class="listitem">S: restart video</li>
-	<li class="listitem">R: rewind video</li>
-</ul>
+	<div class="topbar-wrapper">
+		<ul class="list">
+			<li class="listitem">click card: play/pause</li>
+			<li class="listitem">S: restart video</li>
+			<li class="listitem">R: rewind video</li>
+		</ul>
+		<div class="mute-div">
+			<p class="mute-label">Sound on</p>
+			<img src="Three.js/images//volume.svg" alt="mute/unmute" class="mute-btn">
+		</div>
+	</div>
 </div>
 
 <div class="threeJS" id="ThreeJS"></div>
@@ -42,7 +48,7 @@ var keyboard = new THREEx.KeyboardState();
 // custom global variables
 var video, videoImage, videoImageBg, videoImageContext, videoTexture, card, cardGeo, floorTexture, bgTexture, cardMaterial, cardCamera, cardPosition, cloudGeo, cloudMaterial;
 var rotation = true, playing = false;
-var shine = 50;
+var shine = 30;
 let cloudParticles = [];
 
 init();
@@ -51,6 +57,24 @@ animate();
 // FUNCTIONS 		
 function init() 
 {
+
+	//UI INTERACTION
+	const mute = document.querySelector('.mute-btn');
+	const muteLabel = document.querySelector('.mute-label');
+	mute.addEventListener('click', function muteVideo(event){
+
+    if (video.muted === true) {
+      video.muted = false;
+	  mute.src = "Three.js/images/volume.svg";
+	  muteLabel.textContent = "Sound on";
+    }
+    else{
+      video.muted = true;
+	  mute.classList.remove('muted');
+	  mute.src = "Three.js/images/volume-x.svg"
+	  muteLabel.textContent = "Sound off";
+    }
+	})
 
 	// OFFSET FUNCTION
 	const randomOffsetVal = (value) => {
@@ -156,7 +180,7 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 
 	// SKY
 
-	//renderer.setClearColor(0x99ccff); //light blue sky
+	renderer.setClearColor(0x4e6cff); //light blue sky
 	cloudGeo = new THREE.PlaneBufferGeometry(2360,984);
 
 
@@ -236,12 +260,24 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 // ];
 
 	cardCamera = new THREE.CubeCamera(1, 5000, 512);
-    cardCamera.position.set(0, 160, 0);
-    scene.add(cardCamera);
+    cardCamera.position.set(0, 150, 400);
 
-	cardGeo = new THREE.BoxBufferGeometry( 108, 192, 4, 4 );
-	cardMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, envMap: cardCamera.renderTarget.texture, shininess: shine, reflectivity: 0.4, specular:0xffffff} );
-	card = new THREE.Mesh( cardGeo, cardMaterial );
+	scene.add(cardCamera);
+
+	cardGeo = new THREE.PlaneBufferGeometry( 108, 192);
+
+	const backTexture = new THREE.TextureLoader().load( "Three.js/images/backside-card.jpg");
+
+	var frontMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, envMap: cardCamera.renderTarget, side:THREE.FrontSide, shininess: shine, reflectivity: 0.1, specular:0xffffff } );
+	var backMaterial = new THREE.MeshPhongMaterial( { map: backTexture, side: THREE.BackSide, shininess: shine, specular:0xffffff } );
+
+	card = new THREE.Group();
+
+	cardFront = new THREE.Mesh( cardGeo, frontMaterial );
+	cardBack = new THREE.Mesh( cardGeo, backMaterial );
+
+	card.add(cardFront);
+	card.add(cardBack);
 
 	card.position.set(0,100,0);
 
@@ -266,16 +302,16 @@ function onDocumentMouseDown(event){
 		 var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:0}, 500, TWEEN.Easing.ElasticOut).start();
 		 tween.easing(TWEEN.Easing.Quadratic.Out);
 		 rotation = true;
-		 card.material = cardMaterial;
+		 cardFront.material.reflectivity = 0.1;
 		 faceLight.intensity = 0.08;
 }else{
 	video.play();
 	rotation = false;
-	card.rotation.y = Math.PI;
+	card.rotation.y = Math.PI*2;
 	var tween = new TWEEN.Tween(card.position).to({x: 0, y:120, z:200}, 500, TWEEN.Easing.ElasticIn).start();
 	tween.easing(TWEEN.Easing.Quadratic.In);
-	card.material = new THREE.MeshPhongMaterial( { map: videoTexture, overdraw: true} );
-	faceLight.intensity = 0.2;
+	faceLight.intensity = 0.01;
+	cardFront.material.reflectivity = 0;
 }
 	}
 }
@@ -340,7 +376,7 @@ function render(time)
 	}
 
 	renderer.render( scene, camera );
-	//cardCamera.updateCubeMap( renderer, scene );
+	cardCamera.updateCubeMap( renderer, scene );
 }
 
 </script>
