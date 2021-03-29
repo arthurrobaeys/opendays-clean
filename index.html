@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Video Texture (Three.js)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel=stylesheet href="style.css"/>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
+<script src="Three.js/js/Detector.js"></script>
+<script src="Three.js/js/Stats.js"></script>
+<script src="Three.js/js/OrbitControls.js"></script>
+<script src="Three.js/js/THREEx.KeyboardState.js"></script>
+<script src="Three.js/js/THREEx.FullScreen.js"></script>
+<script src="Three.js/js/THREEx.WindowResize.js"></script>
+<script src='Three.js/js/threex.domevents.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js" integrity="sha512-lIKG1kC5TMb1Zx32vdz1n31YJMZRknVY20U9MJ28hD3y2c0OKN0Ce5NhJji78v8zX5UOSsm+MTBOcJt7yMBnSg==" crossorigin="anonymous"></script>
+
+
+
+<div class="ui">
+<ul class="list">
+	<li class="listitem">click card: play/pause</li>
+	<li class="listitem">S: restart video</li>
+	<li class="listitem">R: rewind video</li>
+</ul>
+</div>
+
+<div class="threeJS" id="ThreeJS"></div>
+<!-- <video id="skyVideo" src="Three.js/videos/sky-vid-reduced.mp4" type="video/mp4" playsinline autoplay muted loop></video> -->
+
+<script>
+	
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var keyboard = new THREEx.KeyboardState();
+
+// custom global variables
+var video, videoImage, videoImageBg, videoImageContext, videoTexture, card, cardGeo, floorTexture, bgTexture, cardMaterial, cardCamera, cardPosition, cloudGeo, cloudMaterial;
+var rotation = true, playing = false;
+var shine = 50;
+let cloudParticles = [];
+
+init();
+animate();
+
+// FUNCTIONS 		
+function init() 
+{
+	let loader = new THREE.TextureLoader();
+
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	scene.add(camera);
+
+	// RENDERER
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true, alpha: true} );
+	else
+		renderer = new THREE.CanvasRenderer(); 
+		renderer.setClearColor(0x99ccff);
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMapSoft = true;
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	// CONTROLS
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+		// EVENTS
+		var domEvents = new THREEx.DomEvents( camera, renderer.domElement);
+
+//see if video is playing, add property
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+get: function(){
+	return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+}
+})
+
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+	// STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+
+	// LIGHT
+
+	let ambient = new THREE.AmbientLight(0x555555, 0.2);
+    scene.add(ambient);
+
+	var light = new THREE.PointLight(0xffffff, .5, 0, 2);
+	light.position.set(0,500,0);
+
+	var faceLight = new THREE.DirectionalLight(0xffffff, .1);
+	faceLight.position.set(0,100,500);
+
+	var directionalLight = new THREE.DirectionalLight( 0xffffff, 1, 0, 2 );
+	directionalLight.castShadow = true;
+	directionalLight.position.set(0, 600, 600);
+	directionalLight.shadow.camera.left = -500;
+directionalLight.shadow.camera.right = 500;
+directionalLight.shadow.camera.top = 500;
+directionalLight.shadow.camera.bottom = -500;
+
+directionalLight.shadow.radius = 2;
+directionalLight.shadow.camera.near = 0;
+directionalLight.shadow.camera.far = 1200;
+directionalLight.shadow.mapSize.width = 2048; // default is 512
+directionalLight.shadow.mapSize.height = 2048; // default is 512
+
+	scene.add(light);
+	scene.add(directionalLight);
+	scene.add(faceLight);
+
+	const cameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+	scene.add(cameraHelper);
+
+	// FLOOR
+	floorTexture = loader.load( "Three.js/images/tegels-small@4x.png" );
+	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+	floorTexture.repeat.set( 10, 10 );
+	var floorMaterial = new THREE.MeshPhongMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+	var floorGeometry = new THREE.PlaneGeometry(15000, 15000, 10, 10);
+	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	floor.receiveShadow = true;
+	floor.position.y = -0.5;
+	floor.rotation.x = Math.PI / 2;
+	scene.add(floor);
+
+	// SKY
+
+	cloudGeo = new THREE.PlaneGeometry(2360,984);
+
+
+	const texMap = loader.load('Three.js/images/smoke.png');
+	const testMat = new THREE.MeshLambertMaterial({map: texMap, transparent: true});
+	
+
+ 	for(let p=0; p<20; p++) {
+	let testCloud = new THREE.Mesh(cloudGeo, testMat);
+   testCloud.position.set(
+     Math.random()*10000 -5000,
+     Math.random()*3000 + 1000,
+     Math.random()*500-4000
+   );
+   testCloud.rotation.x = 1.16;
+   testCloud.rotation.y = -0.12;
+   testCloud.rotation.z = Math.random()*2*Math.PI;
+   testCloud.material.opacity = 0.55;
+   cloudParticles.push(testCloud);
+   scene.add(testCloud);
+ }
+
+	// SKYBOX/FOG
+	var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+	var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, side: THREE.BackSide } );
+	var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
+ //scene.add(skyBox);
+	scene.fog = new THREE.FogExp2( 0xffffff, 0.00050 );
+	
+	
+	///////////
+	// VIDEO //
+	///////////
+	
+	// create the video element
+	video = document.createElement( 'video' );
+	// video.id = 'video';
+	// video.type = ' video/ogg; codecs="theora, vorbis" ';
+	video.src = "Three.js/videos/ShelterStore - story_2.mp4";
+	video.load(); // must call after setting/changing source
+	
+	// alternative method -- 
+	// create DIV in HTML:
+	// <video id="myVideo" autoplay style="display:none">
+	//		<source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+	// </video>
+	// and set JS variable:
+	// video = document.getElementById( 'myVideo' );
+	
+	videoImage = document.createElement( 'canvas' );
+	videoImage.width = 1080;
+	videoImage.height = 1920;
+
+	videoImageContext = videoImage.getContext( '2d' );
+	// background color if no video present
+	var grd = videoImageContext.createLinearGradient(0, 0, 0, 1000);
+	grd.addColorStop(0, "silver");
+	grd.addColorStop(1, "white");
+
+	videoImageContext.fillStyle = grd;
+	videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );
+
+	videoTexture = new THREE.VideoTexture( videoImage );
+	videoTexture.minFilter = THREE.LinearFilter;
+	videoTexture.magFilter = THREE.LinearFilter;
+
+	// the geometry on which the movie will be displayed;
+	// 		movie image will be scaled to fit these dimensions.
+
+// 	const materials = [
+// 		new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true} ),
+// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
+// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
+// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
+// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
+// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
+// ];
+
+	cardCamera = new THREE.CubeCamera(1, 20000, 512);
+    cardCamera.position.set(0, 100, 0);
+    scene.add(cardCamera);
+
+	cardGeo = new THREE.BoxGeometry( 108, 192, 4, 4 );
+	cardMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, overdraw: true, envMap: cardCamera.renderTarget.texture, shininess: shine, reflectivity: 0.4, specular:0xffffff, combine: THREE.MultiplyOperation,} );
+	card = new THREE.Mesh( cardGeo, cardMaterial );
+
+	card.position.set(0,100,0);
+
+	card.castShadow = true;
+	card.receiveShadow = true;
+	scene.add(card);
+	directionalLight.target = card;
+	faceLight.target = card;
+
+	
+	camera.position.set(0,100,500);
+	camera.lookAt(card.position);
+
+	var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+domEvents.addEventListener(card, 'mousedown', onDocumentMouseDown, false);
+
+function onDocumentMouseDown(event){
+	console.log(event);
+    if (event.target == card){
+        if(video.playing){
+		 video.pause();
+		 var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:0}, 500, TWEEN.Easing.ElasticOut).start();
+		 tween.easing(TWEEN.Easing.Quadratic.Out);
+		 rotation = true;
+		 card.material = cardMaterial;
+		 faceLight.intensity = 0.08;
+}else{
+	video.play();
+	rotation = false;
+	card.rotation.y = Math.PI;
+	var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:200}, 500, TWEEN.Easing.ElasticIn).start();
+	tween.easing(TWEEN.Easing.Quadratic.In);
+	card.material = new THREE.MeshPhongMaterial( { map: videoTexture, overdraw: true} );
+	faceLight.intensity = 0.35;
+}
+	}
+}
+				
+	
+}
+
+function animate(time) 
+{
+	time*0.000001;
+	const speed = .0015;
+    const rot = time * speed;
+
+	if(playing = false){
+		video.pause();
+	}
+
+    requestAnimationFrame( animate );
+	if(rotation){
+		card.rotation.y = rot;
+	}
+	floorTexture.offset.y -= .008;
+	render();		
+	update();
+}
+
+function update()
+{
+	if ( keyboard.pressed("s") ) // stop video
+	{
+		video.pause();
+		video.currentTime = 0;
+	}
+	
+	if ( keyboard.pressed("r") ) // rewind video
+		video.currentTime = 0;
+	
+	//controls.update();
+	TWEEN.update()
+	stats.update();
+}
+
+function render(time) 
+{	
+
+	if ( video.readyState === video.HAVE_ENOUGH_DATA ) 
+	{
+		videoImageContext.drawImage( video, 0, 0 );
+		if ( videoTexture ) 
+			videoTexture.needsUpdate = true;
+	}
+	if(cardMaterial){
+		cardMaterial.needsUpdate = true;
+	}
+
+	cloudParticles.forEach(p => {
+      p.position.x -=1;
+	  p.rotation.z -= 0.001;
+   });
+
+	
+
+
+	renderer.render( scene, camera );
+	cardCamera.updateCubeMap( renderer, scene );
+}
+
+</script>
+
+</body>
+</html>
