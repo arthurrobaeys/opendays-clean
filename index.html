@@ -217,18 +217,8 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	
 	// create the video element
 	video = document.createElement( 'video' );
-	// video.id = 'video';
-	// video.type = ' video/ogg; codecs="theora, vorbis" ';
 	video.src = "Three.js/videos/ShelterStore - story_2.mp4";
 	video.load(); // must call after setting/changing source
-	
-	// alternative method -- 
-	// create DIV in HTML:
-	// <video id="myVideo" autoplay style="display:none">
-	//		<source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
-	// </video>
-	// and set JS variable:
-	// video = document.getElementById( 'myVideo' );
 	
 	videoImage = document.createElement( 'canvas' );
 	videoImage.width = 1080;
@@ -247,17 +237,6 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	videoTexture.minFilter = THREE.LinearFilter;
 	videoTexture.magFilter = THREE.LinearFilter;
 
-	// the geometry on which the movie will be displayed;
-	// 		movie image will be scaled to fit these dimensions.
-
-// 	const materials = [
-// 		new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true} ),
-// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
-// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
-// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
-// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
-// 	new THREE.MeshBasicMaterial({map: loader.load('Three.js/images/_Deliverables_Cards Peepshow2.jpg')}),
-// ];
 
 	cardCamera = new THREE.CubeCamera(1, 5000, 512);
     cardCamera.position.set(0, 150, 400);
@@ -302,7 +281,6 @@ function onDocumentMouseDown(event){
 		 var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:0}, 500, TWEEN.Easing.ElasticOut).start();
 		 tween.easing(TWEEN.Easing.Quadratic.Out);
 		 rotation = true;
-		 cardFront.material.reflectivity = 0.1;
 		 faceLight.intensity = 0.08;
 }else{
 	video.play();
