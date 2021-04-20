@@ -104,8 +104,9 @@ function init()
 	loadingManager.onLoad = function(){
 		console.log('all cards loaded');
 		RESOURCES_LOADED = true;
-    	loadingScreen.classList.add( 'fade-out' );
-		setTimeout(setDisplayNone, 5000);
+    	// loadingScreen.classList.add( 'fade-out' );
+		// setTimeout(setDisplayNone, 5000);
+		setDisplayNone();
 	}
 
 	const setDisplayNone = () => {
@@ -206,8 +207,8 @@ get: function(){
 	const nav = document.querySelector('.ui');
 	nav.style.display = 'none';
 
-	const datGui  = new dat.GUI({ autoPlace: true });
-	datGui.domElement.id = 'gui';
+	// const datGui  = new dat.GUI({ autoPlace: true });
+	// datGui.domElement.id = 'gui';
 
 
 	let ambient = new THREE.AmbientLight(0x555555, 1.5);
@@ -237,17 +238,17 @@ get: function(){
 	scene.add( spotLight );
 	scene.add(light);
 
-	var posL = datGui.addFolder('position light');
-	posL.add(light.position, 'x', 0, 1000);
-	posL.add(light.position, 'y', -2000, 10000);
-	posL.add(light.position, 'z', -2000, 2000);
-	posL.add(light, 'intensity', 0, 10, 0.01);
+	// var posL = datGui.addFolder('position light');
+	// posL.add(light.position, 'x', 0, 1000);
+	// posL.add(light.position, 'y', -2000, 10000);
+	// posL.add(light.position, 'z', -2000, 2000);
+	// posL.add(light, 'intensity', 0, 10, 0.01);
 
-	var posL2 = datGui.addFolder('position light2');
-	posL2.add(spotLight.position, 'x', -1000, 1000);
-	posL2.add(spotLight.position, 'y', -2000, 2000);
-	posL2.add(spotLight.position, 'z', -2000, 2000);
-	posL2.add(spotLight, 'intensity', 0, 10, 0.01);
+	// var posL2 = datGui.addFolder('position light2');
+	// posL2.add(spotLight.position, 'x', -1000, 1000);
+	// posL2.add(spotLight.position, 'y', -2000, 2000);
+	// posL2.add(spotLight.position, 'z', -2000, 2000);
+	// posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
 	// FLOOR
 	floorTexture = loader.load( "Three.js/images/tile-seamless-big.png" );
