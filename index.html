@@ -16,8 +16,17 @@
 <script src="Three.js/js/THREEx.FullScreen.js"></script>
 <script src="Three.js/js/THREEx.WindowResize.js"></script>
 <script src='Three.js/js/threex.domevents.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js" integrity="sha512-LF8ZB1iTwi4Qvkm4pekHG4a437Y9Af5ZuwbnW4GTbAWQeR2E4KW8WF+xH8b9psevV7wIlDMx1MH9YfPqgKhA/Q==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js" integrity="sha512-lIKG1kC5TMb1Zx32vdz1n31YJMZRknVY20U9MJ28hD3y2c0OKN0Ce5NhJji78v8zX5UOSsm+MTBOcJt7yMBnSg==" crossorigin="anonymous"></script>
 
+
+<div class="loadingScreen">
+
+	<div class="loadingWrapper">
+		<img class="NG-bird" src="Three.js/images/site-logo-medium.png" alt="nightingale-logo-3D"></img>
+	</div>
+	<div class="loading"></div>
+</div>
 
 
 <div class="ui">
@@ -33,9 +42,12 @@
 		</div>
 	</div>
 </div>
+<div>
+	<p class="flip-btn">Flip Card</p>
+</div>
 
-<div class="threeJS" id="ThreeJS"></div>
-<!-- <video id="skyVideo" src="Three.js/videos/sky-vid-reduced.mp4" type="video/mp4" playsinline autoplay muted loop></video> -->
+<div class="threeJS" id="ThreeJS">
+</div>
 
 <script>
 	
@@ -50,6 +62,29 @@ var video, videoImage, videoImageBg, videoImageContext, videoTexture, card, card
 var rotation = true, playing = false;
 var shine = 30;
 let cloudParticles = [];
+let cardFocus = false;
+let lastClicked = null;
+let rot;
+const flipBtn = document.querySelector('.flip-btn');
+flipBtn.style.display = 'none';
+let RESOURCES_LOADED = false;
+let LOADING_MANAGER = null;
+var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 10000;
+
+// loading screen
+const loadingScreen = document.querySelector( '.loadingScreen' );
+
+//vars for carrousel
+let numOfCards = 30;
+let carrousel = new THREE.Group();
+let carrouselRadius = 550;
+
+//card every 12 degrees
+const radianInterval = (2* Math.PI) / numOfCards;
+const centerPoint = ({x: 0, y: 100, z: 0});
+const focusPoint = ({x: 0, y: 0, z:250});
+
 
 init();
 animate();
@@ -57,6 +92,26 @@ animate();
 // FUNCTIONS 		
 function init() 
 {
+	loadingManager = new THREE.LoadingManager();
+
+	const loadBar = document.querySelector('.loading');
+
+	loadingManager.onProgress = function(item, loaded,total){
+		console.log(item,loaded,total);
+		loadBar.style.width = (loaded / total * 30) + '%';
+	}
+
+	loadingManager.onLoad = function(){
+		console.log('all cards loaded');
+		RESOURCES_LOADED = true;
+    	loadingScreen.classList.add( 'fade-out' );
+		setTimeout(setDisplayNone, 5000);
+	}
+
+	const setDisplayNone = () => {
+		loadingScreen.style.display = 'none';
+		console.log('display off');
+	}
 
 	//UI INTERACTION
 	const mute = document.querySelector('.mute-btn');
@@ -81,19 +136,17 @@ function init()
 	  return value + Math.floor(Math.random() * 10000) * 0.000001;
 	}
 
-	let loader = new THREE.TextureLoader();
+	let loader = new THREE.TextureLoader(loadingManager);
 
 	// SCENE
 	scene = new THREE.Scene();
-	// CAMERA
-	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 5000;
+	// CAMERAS
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
 
 	// RENDERER
 	if ( Detector.webgl )
-		renderer = new THREE.WebGLRenderer( {antialias:true, alpha: true} );
+		renderer = new THREE.WebGLRenderer( {antialias:true,} );
 	else
 		renderer = new THREE.CanvasRenderer(); 
 
@@ -104,14 +157,28 @@ function init()
 	console.log("Geometries in Memory", renderer.info.memory.geometries)
 		
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	//blurring off but a big drop in fps
-	//renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMapSoft = true;
+
+	//PIXELRATIO
+	renderer.setPixelRatio(1)
+	 window.addEventListener("resize", function(){
+	 	const pixelRatio = window.devicePixelRatio;
+     const width  = window.innerWidth;
+     const height = window.innerHeight
+	 if(width < 600){
+	 	renderer.setPixelRatio(2);
+	 }else if(width < 900){
+	 	renderer.setPixelRatio(1.5);
+	 }
+	 });
+
+
+	// renderer.shadowMap.enabled = true;
+	// renderer.shadowMapSoft = true;
 	container = document.getElementById( 'ThreeJS' );
 	container.appendChild( renderer.domElement );
 	// CONTROLS
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
+	controls.enableZoom = false;
 
 		// EVENTS
 		var domEvents = new THREEx.DomEvents( camera, renderer.domElement);
@@ -136,41 +203,57 @@ get: function(){
 
 	// LIGHT
 
-	let ambient = new THREE.AmbientLight(0x555555, .5);
+	const nav = document.querySelector('.ui');
+	nav.style.display = 'none';
+
+	const datGui  = new dat.GUI({ autoPlace: true });
+	datGui.domElement.id = 'gui';
+
+
+	let ambient = new THREE.AmbientLight(0x555555, 1.5);
     scene.add(ambient);
 
-	var light = new THREE.PointLight(0xffffff, .6, 0, 2);
-	light.position.set(0,500,0);
+	var light = new THREE.PointLight(0xffffff, 1.26);
+	light.position.set(0,6789,2000);
 
-	var faceLight = new THREE.DirectionalLight(0xffffff, .06);
-	faceLight.position.set(0,100,500);
 
-	var directionalLight = new THREE.DirectionalLight( 0xffffff, 1, 0, 2 );
-	directionalLight.castShadow = true;
-	directionalLight.position.set(0, 600, 600);
-	directionalLight.shadow.camera.left = -500;
-directionalLight.shadow.camera.right = 500;
-directionalLight.shadow.camera.top = 500;
-directionalLight.shadow.camera.bottom = -500;
+	let lightTarget = new THREE.Object3D();
+	lightTarget.position.set(0, 100, 700);
+	scene.add(lightTarget);
 
-directionalLight.shadow.radius = 2;
-directionalLight.shadow.camera.near = 0;
-directionalLight.shadow.camera.far = 1200;
-directionalLight.shadow.mapSize.width = 2048; // default is 512
-directionalLight.shadow.mapSize.height = 2048; // default is 512
+	const spotLight = new THREE.SpotLight( 0xffffff, 1, 1000, Math.PI/4 );
+	spotLight.position.set( 0, 135, 2000 );
 
+	spotLight.target = lightTarget;
+
+
+	spotLight.shadow.mapSize.width = 1024;
+	spotLight.shadow.mapSize.height = 1024;
+
+	spotLight.shadow.camera.near = 0;
+	spotLight.shadow.camera.far = 500;
+	spotLight.shadow.camera.fov = 45;
+
+	scene.add( spotLight );
 	scene.add(light);
-	scene.add(directionalLight);
-	scene.add(faceLight);
 
-	const cameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-	//scene.add(cameraHelper);
+	var posL = datGui.addFolder('position light');
+	posL.add(light.position, 'x', 0, 1000);
+	posL.add(light.position, 'y', -2000, 10000);
+	posL.add(light.position, 'z', -2000, 2000);
+	posL.add(light, 'intensity', 0, 10, 0.01);
+
+	var posL2 = datGui.addFolder('position light2');
+	posL2.add(spotLight.position, 'x', -1000, 1000);
+	posL2.add(spotLight.position, 'y', -2000, 2000);
+	posL2.add(spotLight.position, 'z', -2000, 2000);
+	posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
 	// FLOOR
-	floorTexture = loader.load( "Three.js/images/tegels-small@4x.png" );
+	floorTexture = loader.load( "Three.js/images/tile-seamless-big.png" );
 	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
 	floorTexture.repeat.set( 10, 10 );
-	var floorMaterial = new THREE.MeshPhongMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+	var floorMaterial = new THREE.MeshStandardMaterial( { map: floorTexture, side: THREE.DoubleSide } );
 	var floorGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 10, 10);
 	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 	floor.receiveShadow = true;
@@ -180,7 +263,7 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 
 	// SKY
 
-	renderer.setClearColor(0x4e6cff); //light blue sky
+	//renderer.setClearColor(0x4e6cff); //light blue sky
 	cloudGeo = new THREE.PlaneBufferGeometry(2360,984);
 
 
@@ -188,27 +271,27 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	const testMat = new THREE.MeshBasicMaterial({map: texMap, transparent: true});
 	
 
- 	for(let p=0; p<50; p++) {
+ 	for(let p=0; p<500; p++) {
 	let testCloud = new THREE.Mesh(cloudGeo, testMat);
    testCloud.position.set(
      Math.random()*10000 -5000,
-     Math.random()*2000 + 200,
-     randomOffsetVal(Math.random()*2000-3000)
+     Math.random()*6000 + 200,
+     randomOffsetVal(Math.random()*10000-15000)
    );
-//    testCloud.rotation.x = 1.16;
-//    testCloud.rotation.y = -0.12;
-//    testCloud.rotation.z = Math.random()*2*Math.PI;
-   testCloud.material.opacity = 0.30;
+   testCloud.material.opacity = 0.70;
    cloudParticles.push(testCloud);
-   scene.add(testCloud);
+   //scene.add(testCloud);
  }
 
-	// SKYBOX/FOG
-	var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-	var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, side: THREE.BackSide } );
-	var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
- //scene.add(skyBox);
-	scene.fog = new THREE.FogExp2( 0xffffff, 0.00050 );
+
+ //BG
+	loader.load('Three.js/images/gradient-bg.png', function (texture){
+        //  var hdriEnv = new THREE.MeshBasicMaterial();
+        //  hdriEnv.envMap = texture;
+		scene.background = texture;
+});
+
+
 	
 	
 	///////////
@@ -233,22 +316,36 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	videoImageContext.fillStyle = grd;
 	videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );
 
-	videoTexture = new THREE.VideoTexture( videoImage );
-	videoTexture.minFilter = THREE.LinearFilter;
-	videoTexture.magFilter = THREE.LinearFilter;
+	//create the cards
+	let cardTextures = [];
+	fetch('./json/cardTextures.json')
+	.then(response => response.json())
+	.then(data => createCards(data));
 
 
-	cardCamera = new THREE.CubeCamera(1, 5000, 512);
-    cardCamera.position.set(0, 150, 400);
 
-	scene.add(cardCamera);
 
+	const createCards = (data) => {
+	for (let i = 0; i < data.length; i++) {
+		
 	cardGeo = new THREE.PlaneBufferGeometry( 108, 192);
 
-	const backTexture = new THREE.TextureLoader().load( "Three.js/images/backside-card.jpg");
+	// videoTexture = new THREE.VideoTexture( videoImage );
 
-	var frontMaterial = new THREE.MeshPhongMaterial( { map: videoTexture, envMap: cardCamera.renderTarget, side:THREE.FrontSide, shininess: shine, reflectivity: 0.1, specular:0xffffff } );
-	var backMaterial = new THREE.MeshPhongMaterial( { map: backTexture, side: THREE.BackSide, shininess: shine, specular:0xffffff } );
+	// videoTexture.minFilter = THREE.LinearFilter;
+	// videoTexture.magFilter = THREE.LinearFilter;
+
+	const backTexture = new THREE.TextureLoader(loadingManager).load(data[i].back);
+	backTexture.minFilter = THREE.LinearFilter;
+	backTexture.magFilter = THREE.LinearFilter;
+
+
+	const frontTexture = new THREE.TextureLoader(loadingManager).load(data[i].front);
+	frontTexture.minFilter = THREE.LinearFilter;
+	frontTexture.magFilter = THREE.LinearFilter;
+
+	var frontMaterial = new THREE.MeshStandardMaterial( { map: frontTexture, side:THREE.FrontSide,  } );
+	var backMaterial = new THREE.MeshStandardMaterial( { map: backTexture, side: THREE.BackSide } );
 
 	card = new THREE.Group();
 
@@ -258,66 +355,89 @@ directionalLight.shadow.mapSize.height = 2048; // default is 512
 	card.add(cardFront);
 	card.add(cardBack);
 
-	card.position.set(0,100,0);
+	card.position.set(
+	centerPoint.x + Math.cos(radianInterval * i) * carrouselRadius
+	,150,
+	centerPoint.z + Math.sin(radianInterval * i) * carrouselRadius)
 
-	card.castShadow = true;
- 	 card.receiveShadow = true;
-	scene.add(card);
-	directionalLight.target = card;
-	faceLight.target = card;
+	card.rotation.y = 180*(Math.PI/180);
 
-
-	camera.position.set(0,150,500);
-	camera.lookAt(card.position);
+	card.lookAt(new THREE.Vector3(0,150,0));
+	carrousel.add(card);
 
 	var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
-domEvents.addEventListener(card, 'mousedown', onDocumentMouseDown, false);
+	domEvents.addEventListener(card, 'click', onDocumentMouseDown, false);
 
-function onDocumentMouseDown(event){
-	console.log(event);
-    if (event.target == card){
-        if(video.playing){
-		 video.pause();
-		 var tween = new TWEEN.Tween(card.position).to({x: 0, y:100, z:0}, 500, TWEEN.Easing.ElasticOut).start();
-		 tween.easing(TWEEN.Easing.Quadratic.Out);
-		 rotation = true;
-		 faceLight.intensity = 0.08;
-}else{
-	video.play();
-	rotation = false;
-	card.rotation.y = Math.PI*2;
-	var tween = new TWEEN.Tween(card.position).to({x: 0, y:120, z:200}, 500, TWEEN.Easing.ElasticIn).start();
-	tween.easing(TWEEN.Easing.Quadratic.In);
-	faceLight.intensity = 0.01;
-	cardFront.material.reflectivity = 0;
-}
 	}
 }
-				
-	
+
+	scene.add(carrousel);
+	carrousel.position.set(0,0,600);
+	console.log(carrousel);
+
+
+	camera.position.set(0,150,1500);
+	//camera.lookAt(card.position);
+
+function onDocumentMouseDown(event){
+
+	let targetCard = event.target;
+	console.log(`you clicked card ${event.target.uuid}`);
+	lastClicked = event.target.uuid;
+
+	if(lastClicked === targetCard.uuid  && targetCard.getWorldPosition().z > 1140){
+				let rotationY = targetCard.rotation.y;
+				console.log(targetCard.getWorldPosition());
+				rotation = false;
+				rotationY += 180*(Math.PI/180);
+				var tweenRot = new TWEEN.Tween(targetCard.rotation).to({y: rotationY}, 500).start();
+				tweenRot.easing(TWEEN.Easing.Quadratic.In);
+				}
+    
+	// 	 var tween = new TWEEN.Tween(carrousel.position).to({x: 0, y:0, z:0}, 500, TWEEN.Easing.ElasticIn).start();
+	//  tween.easing(TWEEN.Easing.Quadratic.In)
+
+}
+
+let scrollspeed = 0;
+document.addEventListener('wheel', event => {
+	scrollspeed = event.deltaY * (Math.PI/180) *0.2;
+	carrousel.rotation.y += -0.5 * scrollspeed;
+	rotation = true;
+})
 }
 
 function animate(time) 
 {
-	time*0.000001;
-	const speed = .0015;
-    const rot = time * speed;
+	 if(RESOURCES_LOADED == false){
+		requestAnimationFrame( animate );
+
+	
+		 return;
+	 }
+
+	let sec = time*0.001;
+	const rotSpeed = 45*(Math.PI/180);
+    rot = sec * rotSpeed;
+
+	//console.log(rot);
 
 	if(playing = false){
 		video.pause();
 	}
 
-		//rotation card
-		if(rotation){
-		card.rotation.y = rot;
-	}
-	floorTexture.offset.y -= .008;
+	//floor movement
+	floorTexture.offset.y -= .004;
 
 	//cloud movement
 	cloudParticles.forEach(p => {
       p.position.x -=0.5;
 	  p.rotation.z -= 0.0001;
    });
+
+   if(rotation == true){
+   carrousel.rotation.y += 0.0001;
+}
 
     requestAnimationFrame( animate );
 	render();		
@@ -354,7 +474,6 @@ function render(time)
 	}
 
 	renderer.render( scene, camera );
-	cardCamera.updateCubeMap( renderer, scene );
 }
 
 </script>
