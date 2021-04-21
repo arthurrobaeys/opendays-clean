@@ -249,7 +249,7 @@ function init() {
     .then((data) => createCards(data));
 
   const createCards = (data) => {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 10; i++) {
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
@@ -291,7 +291,12 @@ function init() {
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
       domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
-      domEvents.addEventListener(card, "touchstart", onDocumentMouseDown, false);
+      domEvents.addEventListener(
+        card,
+        "touchstart",
+        onDocumentMouseDown,
+        false
+      );
     }
   };
 
@@ -334,7 +339,7 @@ function init() {
   });
 
   let prevTouch;
-  document.addEventListener('touchmove', (event) => {
+  document.addEventListener("touchmove", (event) => {
     const TRAVEL_DISTANCE = 0.008;
     const touch = event.touches[0];
     if (!prevTouch) return (prevTouch = touch.clientX);
