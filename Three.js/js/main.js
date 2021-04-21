@@ -249,7 +249,7 @@ function init() {
     .then((data) => createCards(data));
 
   const createCards = (data) => {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
@@ -291,6 +291,7 @@ function init() {
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
       domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
+      domEvents.addEventListener(card, "touchstart", onDocumentMouseDown, false);
     }
   };
 
