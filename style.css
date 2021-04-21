@@ -1,13 +1,29 @@
+@font-face {
+  font-family: sequel;
+  src: url(./Three.js/fonts/sequel100wide-55-webfont.ttf);
+}
+
+
 body {
-  font-family: Monospace;
+  font-family: sequel;
   font-weight: bold;
   margin: 0px;
   overflow: hidden;
+  /* background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(105,130,255,1) 0%, rgba(133,187,255,1) 100%); */
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    180deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(49, 82, 244, 1) 0%,
+    rgba(133, 187, 255, 1) 100%
+  );
 }
 
 .ui {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
+  width: 100%;
 }
 
 #skyVideo {
@@ -18,3 +34,124 @@ body {
   min-height: 100%;
   z-index: -1;
 }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.loadingScreen {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  position: absolute;
+  z-index: 2;
+}
+
+.fade-out {
+  animation-name: fadeOut;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.topbar-wrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.mute-btn {
+  width: 30px;
+  height: 30px;
+  margin-left: 1.5rem;
+}
+
+.mute-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  justify-self: right;
+  margin-right: 2rem;
+}
+
+.mute-label {
+  color: white;
+  text-transform: uppercase;
+  font-family: sequel;
+}
+
+.flip-btn {
+  display: none;
+  position: absolute;
+  right: 20%;
+  top: 45%;
+}
+
+.loading {
+  width: 300px;
+  height: 10px;
+  background-color: white;
+  position: absolute;
+  top: 60%; /* position the top  edge of the element at the middle of the parent */
+  left: 50%; /* position the left edge of the element at the middle of the parent */
+
+  transform: translate(
+    -50%,
+    -50%
+  ); /* This is a shorthand of
+                                       translateX(-50%) and translateY(-50%) */
+}
+
+.NG-bird {
+  position: absolute;
+  width: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.continue-btn {
+  background-color: rgb(6, 53, 238);
+  width: max-content;
+  position: absolute;
+  padding: 0.6rem 2rem;
+  bottom: 100px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  display: none;
+}
+
+.continue-txt {
+  color: white;
+  font-family: sequel;
+}
+
+.ng-logo-ui {
+  width: 45px;
+  height: 45px;
+}
+
+.ng-logo-link {
+  justify-self: center;
+  align-self: center;
+}
+
+.ui-about {
+  justify-self: left;
+  margin-left: 2rem;
+  align-self: center;
+  text-decoration: none;
+  color: white;
+  text-transform: uppercase;
+}
+
