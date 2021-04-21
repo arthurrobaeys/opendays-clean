@@ -238,7 +238,6 @@ function init() {
   });
 
   //create the cards
-  let cardTextures = [];
   fetch('./json/cardTextures.json')
     .then((response) => response.json())
     .then((data) => createCards(data));
