@@ -332,9 +332,16 @@ function init() {
     rotation = true;
   });
 
-  document.addEventListener("touchmove", (event) => {
-    scrollspeed = event.deltaY * (Math.PI / 180) * 0.2;
-    carrousel.rotation.y += -0.5 * scrollspeed;
+  let prevTouch;
+  document.addEventListener('touchmove', (event) => {
+    const TRAVEL_DISTANCE = 0.008;
+    const touch = event.touches[0];
+    if (!prevTouch) return (prevTouch = touch.clientX);
+
+    if (touch.clientX < prevTouch) carrousel.rotation.y -= TRAVEL_DISTANCE; //go left
+    if (touch.clientX > prevTouch) carrousel.rotation.y += TRAVEL_DISTANCE; //go right
+
+    prevTouch = touch.clientX;
     rotation = true;
   });
 }
