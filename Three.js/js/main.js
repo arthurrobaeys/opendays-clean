@@ -331,6 +331,12 @@ function init() {
     carrousel.rotation.y += -0.5 * scrollspeed;
     rotation = true;
   });
+
+  document.addEventListener("touchmove", (event) => {
+    scrollspeed = event.deltaY * (Math.PI / 180) * 0.2;
+    carrousel.rotation.y += -0.5 * scrollspeed;
+    rotation = true;
+  });
 }
 
 function animate(time) {
