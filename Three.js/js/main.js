@@ -250,19 +250,28 @@ function init() {
 
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+  const originalCardGeo = new THREE.PlaneBufferGeometry(108, 192);
+
   const createCards = async (data) => {
-    for (let i = 0; i < 20; i++) {
-      cardGeo = new THREE.PlaneBufferGeometry(108, 192);
+    for (let i = 0; i < 30; i++) {
+      cardGeo = originalCardGeo.clone();
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
-        data[i].back
-      );
-      backTexture.minFilter = THREE.LinearFilter;
-
-      const frontTexture = new THREE.TextureLoader(loadingManager).load(
         data[i].front
       );
+
+      backTexture.wrapS = THREE.RepeatWrapping;
+      backTexture.repeat.x = - 1;
+
+      backTexture.minFilter = THREE.LinearFilter;
+      backTexture.generateMipmaps = false;
+
+      const frontTexture = new THREE.TextureLoader(loadingManager).load(
+        data[i].back
+      );
+
       frontTexture.minFilter = THREE.LinearFilter;
+      frontTexture.generateMipmaps = false;
 
       var frontMaterial = new THREE.MeshStandardMaterial({
         map: frontTexture,
@@ -287,7 +296,7 @@ function init() {
         centerPoint.z + Math.sin(radianInterval * i) * carrouselRadius
       );
 
-      card.rotation.y = 180 * (Math.PI / 180);
+      card.rotation.y = 0 * (Math.PI / 180);
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
       domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
@@ -297,7 +306,7 @@ function init() {
         onDocumentMouseDown,
         false
       );
-      await sleep(100);
+      await sleep(50);
     }
   };
 
