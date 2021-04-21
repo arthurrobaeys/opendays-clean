@@ -331,6 +331,7 @@ function init() {
         .start()
         .onComplete(() => (isAnimating = false));
       tweenRot.easing(TWEEN.Easing.Quadratic.In);
+      return;
     }
 
     isAnimating = false;
