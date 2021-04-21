@@ -26,19 +26,19 @@
 		<img class="NG-bird" src="Three.js/images/site-logo-medium.png" alt="nightingale-logo-3D"></img>
 	</div>
 	<div class="loading"></div>
+	<div class="continue-btn">
+		<p class="continue-txt">Continue</p>
+	</div>
 </div>
 
 
 <div class="ui">
 	<div class="topbar-wrapper">
-		<ul class="list">
-			<li class="listitem">click card: play/pause</li>
-			<li class="listitem">S: restart video</li>
-			<li class="listitem">R: rewind video</li>
-		</ul>
+		<a class="ui-about" href="https://www.nightingale.world/about">About</a>
+		<a class="ng-logo-link" href="https://www.nightingale.world/"><img class="ng-logo-ui" src="Three.js/images/site-logo-medium.png" alt="ng-logo"></a>
 		<div class="mute-div">
-			<p class="mute-label">Sound on</p>
-			<img src="Three.js/images//volume.svg" alt="mute/unmute" class="mute-btn">
+			<p class="mute-label">Music on</p>
+			<img src="Three.js/images//music-on.svg" alt="mute/unmute" class="mute-btn">
 		</div>
 	</div>
 </div>
@@ -60,30 +60,29 @@ var keyboard = new THREEx.KeyboardState();
 // custom global variables
 var video, videoImage, videoImageBg, videoImageContext, videoTexture, card, cardGeo, floorTexture, bgTexture, cardMaterial, cardCamera, cardPosition, cloudGeo, cloudMaterial;
 var rotation = true, playing = false;
-var shine = 30;
 let cloudParticles = [];
 let cardFocus = false;
 let lastClicked = null;
-let rot;
 const flipBtn = document.querySelector('.flip-btn');
 flipBtn.style.display = 'none';
 let RESOURCES_LOADED = false;
 let LOADING_MANAGER = null;
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 10000;
+const labelMusic = document.querySelector('.mute-label');
 
 // loading screen
 const loadingScreen = document.querySelector( '.loadingScreen' );
+const continueBtn = document.querySelector('.continue-btn');
 
 //vars for carrousel
 let numOfCards = 30;
 let carrousel = new THREE.Group();
-let carrouselRadius = 550;
+let carrouselRadius = 630;
+let isAnimating = false;
 
-//card every 12 degrees
 const radianInterval = (2* Math.PI) / numOfCards;
 const centerPoint = ({x: 0, y: 100, z: 0});
-const focusPoint = ({x: 0, y: 0, z:250});
 
 
 init();
@@ -104,33 +103,55 @@ function init()
 	loadingManager.onLoad = function(){
 		console.log('all cards loaded');
 		RESOURCES_LOADED = true;
-    	// loadingScreen.classList.add( 'fade-out' );
-		// setTimeout(setDisplayNone, 5000);
-		setDisplayNone();
+		continueBtn.style.display = 'block';
+
+		continueBtn.addEventListener('click', setDisplayNone);
+		
 	}
 
-	const setDisplayNone = () => {
-		loadingScreen.style.display = 'none';
-		console.log('display off');
+	const setDisplayNone = async (e) => {
+		console.log(e);
+		await fadeOut();
+		console.log("fadeout done");
+	}
+
+	const fadeOut = async () => {
+		loadingScreen.classList.add( 'fade-out' );
+		await setTimeout(function(){
+			 loadingScreen.style.display = 'none'; 
+			 console.log("display off");
+			}, 1000);
 	}
 
 	//UI INTERACTION
+	if(SCREEN_WIDTH < 550){
+		labelMusic.style.display = "none";
+	}
 	const mute = document.querySelector('.mute-btn');
 	const muteLabel = document.querySelector('.mute-label');
 	mute.addEventListener('click', function muteVideo(event){
 
     if (video.muted === true) {
       video.muted = false;
-	  mute.src = "Three.js/images/volume.svg";
-	  muteLabel.textContent = "Sound on";
+	  mute.src = "Three.js/images/music-on.svg";
+	  muteLabel.textContent = "Music on";
     }
     else{
       video.muted = true;
 	  mute.classList.remove('muted');
-	  mute.src = "Three.js/images/volume-x.svg"
-	  muteLabel.textContent = "Sound off";
+	  mute.src = "Three.js/images/music-off.svg"
+	  muteLabel.textContent = "Music off";
     }
 	})
+
+	window.addEventListener("resize", function(){
+		let width = window.innerWidth;
+		if(width < 550){
+			labelMusic.style.display = "none";
+		}else if(width >= 550) {
+			labelMusic.style.display = "block";
+		}
+	 });
 
 	// OFFSET FUNCTION
 	const randomOffsetVal = (value) => {
@@ -151,6 +172,8 @@ function init()
 	else
 		renderer = new THREE.CanvasRenderer(); 
 
+	var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+
 	//LOGGING PERFORMANCE
 	console.log("Scene polycount:", renderer.info.render.triangles)
 	console.log("Active Drawcalls:", renderer.info.render.calls)
@@ -161,16 +184,16 @@ function init()
 
 	//PIXELRATIO
 	renderer.setPixelRatio(1)
-	 window.addEventListener("resize", function(){
-	 	const pixelRatio = window.devicePixelRatio;
-     const width  = window.innerWidth;
-     const height = window.innerHeight
-	 if(width < 600){
-	 	renderer.setPixelRatio(2);
-	 }else if(width < 900){
-	 	renderer.setPixelRatio(1.5);
-	 }
-	 });
+	//  window.addEventListener("resize", function(){
+	//  	const pixelRatio = window.devicePixelRatio;
+    //  const width  = window.innerWidth;
+    //  const height = window.innerHeight
+	//  if(width < 600){
+	//  	renderer.setPixelRatio(2);
+	//  }else if(width < 900){
+	//  	renderer.setPixelRatio(1.5);
+	//  }
+	//  });
 
 
 	// renderer.shadowMap.enabled = true;
@@ -204,9 +227,11 @@ get: function(){
 
 	// LIGHT
 
-	const nav = document.querySelector('.ui');
-	nav.style.display = 'none';
+	//turn off ui
+	// const nav = document.querySelector('.ui');
+	// nav.style.display = 'none';
 
+	//dat.gui
 	// const datGui  = new dat.GUI({ autoPlace: true });
 	// datGui.domElement.id = 'gui';
 
@@ -358,15 +383,14 @@ get: function(){
 
 	card.position.set(
 	centerPoint.x + Math.cos(radianInterval * i) * carrouselRadius
-	,150,
+	,140,
 	centerPoint.z + Math.sin(radianInterval * i) * carrouselRadius)
 
 	card.rotation.y = 180*(Math.PI/180);
 
-	card.lookAt(new THREE.Vector3(0,150,0));
+	card.lookAt(new THREE.Vector3(0,140,0));
 	carrousel.add(card);
 
-	var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 	domEvents.addEventListener(card, 'click', onDocumentMouseDown, false);
 
 	}
@@ -380,11 +404,15 @@ get: function(){
 	camera.position.set(0,150,1500);
 	//camera.lookAt(card.position);
 
-function onDocumentMouseDown(event){
-
+async function onDocumentMouseDown(event){
 	let targetCard = event.target;
-	console.log(`you clicked card ${event.target.uuid}`);
 	lastClicked = event.target.uuid;
+
+	if(isAnimating){
+		return;
+	}
+
+	isAnimating = true;
 
 	if(lastClicked === targetCard.uuid  && targetCard.getWorldPosition().z > 1140){
 				let rotationY = targetCard.rotation.y;
@@ -393,7 +421,11 @@ function onDocumentMouseDown(event){
 				rotationY += 180*(Math.PI/180);
 				var tweenRot = new TWEEN.Tween(targetCard.rotation).to({y: rotationY}, 500).start();
 				tweenRot.easing(TWEEN.Easing.Quadratic.In);
+				await setTimeout(function() {
+        			isAnimating = false;
+    			}, 500);
 				}
+
     
 	// 	 var tween = new TWEEN.Tween(carrousel.position).to({x: 0, y:0, z:0}, 500, TWEEN.Easing.ElasticIn).start();
 	//  tween.easing(TWEEN.Easing.Quadratic.In)
@@ -418,10 +450,6 @@ function animate(time)
 	 }
 
 	let sec = time*0.001;
-	const rotSpeed = 45*(Math.PI/180);
-    rot = sec * rotSpeed;
-
-	//console.log(rot);
 
 	if(playing = false){
 		video.pause();
@@ -429,12 +457,6 @@ function animate(time)
 
 	//floor movement
 	floorTexture.offset.y -= .004;
-
-	//cloud movement
-	cloudParticles.forEach(p => {
-      p.position.x -=0.5;
-	  p.rotation.z -= 0.0001;
-   });
 
    if(rotation == true){
    carrousel.rotation.y += 0.0001;
