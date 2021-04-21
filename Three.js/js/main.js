@@ -248,8 +248,10 @@ function init() {
     .then((response) => response.json())
     .then((data) => createCards(data));
 
-  const createCards = (data) => {
-    for (let i = 0; i < 10; i++) {
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const createCards = async (data) => {
+    for (let i = 0; i < 20; i++) {
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
@@ -295,6 +297,10 @@ function init() {
         onDocumentMouseDown,
         false
       );
+<<<<<<< HEAD
+=======
+      await sleep(100);
+>>>>>>> 1515e85eb86135681ad205146cfc50a68a9a49cd
     }
   };
 
