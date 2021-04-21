@@ -328,12 +328,12 @@ function init() {
       rotationY += 180 * (Math.PI / 180);
       var tweenRot = new TWEEN.Tween(targetCard.rotation)
         .to({ y: rotationY }, 500)
-        .start();
+        .start()
+        .onComplete(() => (isAnimating = false));
       tweenRot.easing(TWEEN.Easing.Quadratic.In);
-      await setTimeout(function () {
-        isAnimating = false;
-      }, 500);
     }
+
+    isAnimating = false;
   }
 
   let scrollspeed = 0;
