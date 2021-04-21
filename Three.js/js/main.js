@@ -243,19 +243,13 @@ function init() {
   });
 
   //create the cards
+  let cardTextures = [];
   fetch("./json/cardTextures.json")
     .then((response) => response.json())
     .then((data) => createCards(data));
 
-<<<<<<< HEAD
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-  const createCards = async (data) => {
-    for (let i = 0; i < 20; i++) {
-=======
   const createCards = (data) => {
     for (let i = 0; i < 10; i++) {
->>>>>>> bfcff00684c8de923d220a4dcd5958dd7fd07416
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
@@ -295,16 +289,12 @@ function init() {
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
       domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
-<<<<<<< HEAD
-      await sleep(100);
-=======
       domEvents.addEventListener(
         card,
         "touchstart",
         onDocumentMouseDown,
         false
       );
->>>>>>> bfcff00684c8de923d220a4dcd5958dd7fd07416
     }
   };
 
