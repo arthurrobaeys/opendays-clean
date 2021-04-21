@@ -119,7 +119,7 @@ function init() {
 
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  //renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.physicallyCorrectLights;
 
   //PIXELRATIO
@@ -177,14 +177,14 @@ function init() {
 
   // LIGHT
 
-    //const datGui  = new dat.GUI({ autoPlace: true });
-    //datGui.domElement.id = 'gui';
+  //const datGui  = new dat.GUI({ autoPlace: true });
+  //datGui.domElement.id = 'gui';
 
   let ambient = new THREE.AmbientLight(0x555555, 1.5);
   scene.add(ambient);
 
   var light = new THREE.PointLight(0xffffff, 0.49);
-  light.position.set(0, 3877, -1850);
+  light.position.set(0, 5000, -1850);
 
   let lightTarget = new THREE.Object3D();
   lightTarget.position.set(0, 100, 700);
@@ -205,17 +205,16 @@ function init() {
   scene.add(spotLight);
   scene.add(light);
 
-
-    // var posL = datGui.addFolder('position light');
-    //posL.add(light.position, 'x', 0, 1000);
-    //posL.add(light.position, 'y', -2000, 10000);
-    //posL.add(light.position, 'z', -2000, 2000);
-    //posL.add(light, 'intensity', 0, 10, 0.01);
-    //var posL2 = datGui.addFolder('position light2');
-    //posL2.add(spotLight.position, 'x', -1000, 1000);
-    //posL2.add(spotLight.position, 'y', -2000, 2000);
-    //posL2.add(spotLight.position, 'z', -2000, 2000);
-    //posL2.add(spotLight, 'intensity', 0, 10, 0.01);
+  // var posL = datGui.addFolder('position light');
+  //posL.add(light.position, 'x', 0, 1000);
+  //posL.add(light.position, 'y', -2000, 10000);
+  //posL.add(light.position, 'z', -2000, 2000);
+  //posL.add(light, 'intensity', 0, 10, 0.01);
+  //var posL2 = datGui.addFolder('position light2');
+  //posL2.add(spotLight.position, 'x', -1000, 1000);
+  //posL2.add(spotLight.position, 'y', -2000, 2000);
+  //posL2.add(spotLight.position, 'z', -2000, 2000);
+  //posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
   // FLOOR
   floorTexture = loader.load('Three.js/images/tiles-1024.jpg');
@@ -251,45 +250,42 @@ function init() {
       cardGeo = originalCardGeo.clone();
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
-        data[i].front
+        data[i].back
       );
-
-       backTexture.wrapS = THREE.RepeatWrapping;
-       backTexture.repeat.x = -1;
 
       backTexture.minFilter = THREE.LinearFilter;
       backTexture.generateMipmaps = false;
 
       const frontTexture = new THREE.TextureLoader(loadingManager).load(
-        data[i].back
+        data[i].front
       );
 
-      if(backTexture){
+      frontTexture.wrapS = THREE.RepeatWrapping;
+      frontTexture.repeat.x = -1;
+
+      frontTexture.minFilter = THREE.LinearFilter;
+      frontTexture.generateMipmaps = false;
+
+      if (backTexture) {
         renderer.initTexture(backTexture);
-        console.log('init back');
       }
-      if(frontTexture){
+      if (frontTexture) {
         renderer.initTexture(frontTexture);
-        console.log('init front');
       }
 
       const normalMap = new THREE.TextureLoader(loadingManager).load(
         './Three.js/images/paperNormalMap.jpg'
       );
 
-      frontTexture.minFilter = THREE.LinearFilter;
-      frontTexture.generateMipmaps = false;
-
       var frontMaterial = new THREE.MeshStandardMaterial({
         map: frontTexture,
-        side: THREE.FrontSide,
-        normalMap: normalMap,
-        normalScale: new THREE.Vector2(1.2, 1.2),
+        side: THREE.BackSide,
       });
       var backMaterial = new THREE.MeshStandardMaterial({
         map: backTexture,
-        side: THREE.BackSide,
-        color: "#dfdfdf",
+        side: THREE.FrontSide,
+        normalMap: normalMap,
+        normalScale: new THREE.Vector2(1.2, 1.2),
       });
 
       card = new THREE.Group();
@@ -319,7 +315,7 @@ function init() {
       //await sleep(50);
     }
   };
-  
+
   scene.add(carrousel);
 
   carrousel.position.set(0, 0, 600);
@@ -328,11 +324,14 @@ function init() {
   //compile everything
   renderer.compile(scene, camera);
 
-
   //functionalities, events
   async function onDocumentMouseDown(event) {
     let targetCard = event.target;
-    const target = new THREE.Vector3(targetCard.position.x,targetCard.position.y,targetCard.position.z)
+    const target = new THREE.Vector3(
+      targetCard.position.x,
+      targetCard.position.y,
+      targetCard.position.z
+    );
     lastClicked = event.target.uuid;
 
     if (isAnimating) {
