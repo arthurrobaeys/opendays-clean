@@ -87,6 +87,7 @@ body {
   color: white;
   text-transform: uppercase;
   font-family: sequel;
+  font-size: 0.8rem;
 }
 
 .flip-btn {
@@ -152,6 +153,7 @@ body {
   align-self: center;
   text-decoration: none;
   color: white;
+  font-size: 0.8rem;
   text-transform: uppercase;
 }
 

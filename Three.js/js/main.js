@@ -28,7 +28,7 @@ var SCREEN_WIDTH = window.innerWidth,
 var VIEW_ANGLE = 45,
   ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
   NEAR = 0.1,
-  FAR = 10000;
+  FAR = 5000;
 const labelMusic = document.querySelector('.mute-label');
 
 // loading screen
@@ -60,7 +60,6 @@ function init() {
   loadingManager.onLoad = function () {
     RESOURCES_LOADED = true;
     continueBtn.style.display = 'block';
-
     continueBtn.addEventListener('click', setDisplayNone);
   };
 
@@ -120,6 +119,9 @@ function init() {
 
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.physicallyCorrectLights;
+
   //PIXELRATIO
   if (SCREEN_WIDTH < 550) {
     labelMusic.style.display = 'none';
@@ -141,8 +143,6 @@ function init() {
     }
   });
 
-  // renderer.shadowMap.enabled = true;
-  // renderer.shadowMapSoft = true;
   container = document.getElementById('ThreeJS');
   container.appendChild(renderer.domElement);
   // CONTROLS
@@ -177,26 +177,21 @@ function init() {
 
   // LIGHT
 
-  //turn off ui
-  // const nav = document.querySelector('.ui');
-  // nav.style.display = 'none';
-
-  //dat.gui
-  // const datGui  = new dat.GUI({ autoPlace: true });
-  // datGui.domElement.id = 'gui';
+    //const datGui  = new dat.GUI({ autoPlace: true });
+    //datGui.domElement.id = 'gui';
 
   let ambient = new THREE.AmbientLight(0x555555, 1.5);
   scene.add(ambient);
 
-  var light = new THREE.PointLight(0xffffff, 1.26);
-  light.position.set(0, 6789, 2000);
+  var light = new THREE.PointLight(0xffffff, 0.49);
+  light.position.set(0, 3877, -1850);
 
   let lightTarget = new THREE.Object3D();
   lightTarget.position.set(0, 100, 700);
   scene.add(lightTarget);
 
-  const spotLight = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 4);
-  spotLight.position.set(0, 135, 2000);
+  const spotLight = new THREE.SpotLight(0xffffff, 2.14, 1000, Math.PI / 4);
+  spotLight.position.set(0, 91, 2000);
 
   spotLight.target = lightTarget;
 
@@ -210,20 +205,20 @@ function init() {
   scene.add(spotLight);
   scene.add(light);
 
-  // var posL = datGui.addFolder('position light');
-  // posL.add(light.position, 'x', 0, 1000);
-  // posL.add(light.position, 'y', -2000, 10000);
-  // posL.add(light.position, 'z', -2000, 2000);
-  // posL.add(light, 'intensity', 0, 10, 0.01);
 
-  // var posL2 = datGui.addFolder('position light2');
-  // posL2.add(spotLight.position, 'x', -1000, 1000);
-  // posL2.add(spotLight.position, 'y', -2000, 2000);
-  // posL2.add(spotLight.position, 'z', -2000, 2000);
-  // posL2.add(spotLight, 'intensity', 0, 10, 0.01);
+    // var posL = datGui.addFolder('position light');
+    //posL.add(light.position, 'x', 0, 1000);
+    //posL.add(light.position, 'y', -2000, 10000);
+    //posL.add(light.position, 'z', -2000, 2000);
+    //posL.add(light, 'intensity', 0, 10, 0.01);
+    //var posL2 = datGui.addFolder('position light2');
+    //posL2.add(spotLight.position, 'x', -1000, 1000);
+    //posL2.add(spotLight.position, 'y', -2000, 2000);
+    //posL2.add(spotLight.position, 'z', -2000, 2000);
+    //posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
   // FLOOR
-  floorTexture = loader.load('Three.js/images/tile-seamless-big.png');
+  floorTexture = loader.load('Three.js/images/tiles-1024.jpg');
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.set(10, 10);
   var floorMaterial = new THREE.MeshStandardMaterial({
@@ -249,7 +244,7 @@ function init() {
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const originalCardGeo = new THREE.PlaneBufferGeometry(108, 192);
+  const originalCardGeo = new THREE.PlaneBufferGeometry(108, 170);
 
   const createCards = async (data) => {
     for (let i = 0; i < 30; i++) {
@@ -259,8 +254,8 @@ function init() {
         data[i].front
       );
 
-      backTexture.wrapS = THREE.RepeatWrapping;
-      backTexture.repeat.x = -1;
+       backTexture.wrapS = THREE.RepeatWrapping;
+       backTexture.repeat.x = -1;
 
       backTexture.minFilter = THREE.LinearFilter;
       backTexture.generateMipmaps = false;
@@ -269,16 +264,32 @@ function init() {
         data[i].back
       );
 
+      if(backTexture){
+        renderer.initTexture(backTexture);
+        console.log('init back');
+      }
+      if(frontTexture){
+        renderer.initTexture(frontTexture);
+        console.log('init front');
+      }
+
+      const normalMap = new THREE.TextureLoader(loadingManager).load(
+        './Three.js/images/paperNormalMap.jpg'
+      );
+
       frontTexture.minFilter = THREE.LinearFilter;
       frontTexture.generateMipmaps = false;
 
       var frontMaterial = new THREE.MeshStandardMaterial({
         map: frontTexture,
         side: THREE.FrontSide,
+        normalMap: normalMap,
+        normalScale: new THREE.Vector2(1.2, 1.2),
       });
       var backMaterial = new THREE.MeshStandardMaterial({
         map: backTexture,
         side: THREE.BackSide,
+        color: "#dfdfdf",
       });
 
       card = new THREE.Group();
@@ -308,13 +319,20 @@ function init() {
       //await sleep(50);
     }
   };
-
+  
   scene.add(carrousel);
+
   carrousel.position.set(0, 0, 600);
   camera.position.set(0, 150, 1500);
 
+  //compile everything
+  renderer.compile(scene, camera);
+
+
+  //functionalities, events
   async function onDocumentMouseDown(event) {
     let targetCard = event.target;
+    const target = new THREE.Vector3(targetCard.position.x,targetCard.position.y,targetCard.position.z)
     lastClicked = event.target.uuid;
 
     if (isAnimating) {
@@ -325,7 +343,7 @@ function init() {
 
     if (
       lastClicked === targetCard.uuid &&
-      targetCard.getWorldPosition().z > 1140
+      targetCard.getWorldPosition(target).z > 1140
     ) {
       let rotationY = targetCard.rotation.y;
       rotation = false;
