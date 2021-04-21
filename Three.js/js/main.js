@@ -103,11 +103,6 @@ function init() {
     }
   });
 
-  // OFFSET FUNCTION
-  const randomOffsetVal = (value) => {
-    return value + Math.floor(Math.random() * 10000) * 0.000001;
-  };
-
   let loader = new THREE.TextureLoader(loadingManager);
 
   // SCENE
@@ -248,7 +243,7 @@ function init() {
     .then((response) => response.json())
     .then((data) => createCards(data));
 
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const originalCardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
@@ -261,7 +256,7 @@ function init() {
       );
 
       backTexture.wrapS = THREE.RepeatWrapping;
-      backTexture.repeat.x = - 1;
+      backTexture.repeat.x = -1;
 
       backTexture.minFilter = THREE.LinearFilter;
       backTexture.generateMipmaps = false;
