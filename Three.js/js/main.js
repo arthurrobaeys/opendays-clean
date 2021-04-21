@@ -297,10 +297,7 @@ function init() {
         onDocumentMouseDown,
         false
       );
-<<<<<<< HEAD
-=======
       await sleep(100);
->>>>>>> 1515e85eb86135681ad205146cfc50a68a9a49cd
     }
   };
 
