@@ -249,7 +249,7 @@ function init() {
     .then((data) => createCards(data));
 
   const createCards = (data) => {
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < 1; i++) {
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
