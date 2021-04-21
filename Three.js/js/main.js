@@ -76,9 +76,6 @@ function init() {
   };
 
   //UI INTERACTION
-  if (SCREEN_WIDTH < 550) {
-    labelMusic.style.display = 'none';
-  }
   const mute = document.querySelector('.mute-btn');
   const muteLabel = document.querySelector('.mute-label');
   mute.addEventListener('click', function muteVideo(event) {
@@ -124,17 +121,25 @@ function init() {
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
   //PIXELRATIO
-  renderer.setPixelRatio(1);
-  //  window.addEventListener("resize", function(){
-  //  	const pixelRatio = window.devicePixelRatio;
-  //  const width  = window.innerWidth;
-  //  const height = window.innerHeight
-  //  if(width < 600){
-  //  	renderer.setPixelRatio(2);
-  //  }else if(width < 900){
-  //  	renderer.setPixelRatio(1.5);
-  //  }
-  //  });
+  if (SCREEN_WIDTH < 550) {
+    labelMusic.style.display = 'none';
+    renderer.setPixelRatio(2);
+  } else if (SCREEN_WIDTH < 900) {
+    renderer.setPixelRatio(1.5);
+  } else if (SCREEN_WIDTH < 1200) {
+    renderer.setPixelRatio(1);
+  }
+
+  window.addEventListener('resize', function () {
+    const pixelRatio = window.devicePixelRatio;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    if (width < 600) {
+      renderer.setPixelRatio(2);
+    } else if (width < 900) {
+      renderer.setPixelRatio(1.5);
+    }
+  });
 
   // renderer.shadowMap.enabled = true;
   // renderer.shadowMapSoft = true;
@@ -300,7 +305,7 @@ function init() {
         onDocumentMouseDown,
         false
       );
-      await sleep(50);
+      //await sleep(50);
     }
   };
 
