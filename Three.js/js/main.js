@@ -256,13 +256,11 @@ function init() {
         data[i].back
       );
       backTexture.minFilter = THREE.LinearFilter;
-      backTexture.magFilter = THREE.LinearFilter;
 
       const frontTexture = new THREE.TextureLoader(loadingManager).load(
         data[i].front
       );
       frontTexture.minFilter = THREE.LinearFilter;
-      frontTexture.magFilter = THREE.LinearFilter;
 
       var frontMaterial = new THREE.MeshStandardMaterial({
         map: frontTexture,
