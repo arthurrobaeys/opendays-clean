@@ -29,11 +29,11 @@ var VIEW_ANGLE = 45,
   ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
   NEAR = 0.1,
   FAR = 10000;
-const labelMusic = document.querySelector(".mute-label");
+const labelMusic = document.querySelector('.mute-label');
 
 // loading screen
-const loadingScreen = document.querySelector(".loadingScreen");
-const continueBtn = document.querySelector(".continue-btn");
+const loadingScreen = document.querySelector('.loadingScreen');
+const continueBtn = document.querySelector('.continue-btn');
 
 //vars for carrousel
 let numOfCards = 30;
@@ -51,17 +51,17 @@ animate();
 function init() {
   loadingManager = new THREE.LoadingManager();
 
-  const loadBar = document.querySelector(".loading");
+  const loadBar = document.querySelector('.loading');
 
   loadingManager.onProgress = function (item, loaded, total) {
-    loadBar.style.width = (loaded / total) * 30 + "%";
+    loadBar.style.width = (loaded / total) * 30 + '%';
   };
 
   loadingManager.onLoad = function () {
     RESOURCES_LOADED = true;
-    continueBtn.style.display = "block";
+    continueBtn.style.display = 'block';
 
-    continueBtn.addEventListener("click", setDisplayNone);
+    continueBtn.addEventListener('click', setDisplayNone);
   };
 
   const setDisplayNone = async (e) => {
@@ -69,37 +69,37 @@ function init() {
   };
 
   const fadeOut = async () => {
-    loadingScreen.classList.add("fade-out");
+    loadingScreen.classList.add('fade-out');
     await setTimeout(function () {
-      loadingScreen.style.display = "none";
+      loadingScreen.style.display = 'none';
     }, 1000);
   };
 
   //UI INTERACTION
   if (SCREEN_WIDTH < 550) {
-    labelMusic.style.display = "none";
+    labelMusic.style.display = 'none';
   }
-  const mute = document.querySelector(".mute-btn");
-  const muteLabel = document.querySelector(".mute-label");
-  mute.addEventListener("click", function muteVideo(event) {
+  const mute = document.querySelector('.mute-btn');
+  const muteLabel = document.querySelector('.mute-label');
+  mute.addEventListener('click', function muteVideo(event) {
     if (video.muted === true) {
       video.muted = false;
-      mute.src = "Three.js/images/music-on.svg";
-      muteLabel.textContent = "Music on";
+      mute.src = 'Three.js/images/music-on.svg';
+      muteLabel.textContent = 'Music on';
     } else {
       video.muted = true;
-      mute.classList.remove("muted");
-      mute.src = "Three.js/images/music-off.svg";
-      muteLabel.textContent = "Music off";
+      mute.classList.remove('muted');
+      mute.src = 'Three.js/images/music-off.svg';
+      muteLabel.textContent = 'Music off';
     }
   });
 
-  window.addEventListener("resize", function () {
+  window.addEventListener('resize', function () {
     let width = window.innerWidth;
     if (width < 550) {
-      labelMusic.style.display = "none";
+      labelMusic.style.display = 'none';
     } else if (width >= 550) {
-      labelMusic.style.display = "block";
+      labelMusic.style.display = 'block';
     }
   });
 
@@ -113,10 +113,10 @@ function init() {
 
   // RENDERER
   if (Detector.webgl) {
-    console.log("webgl renderer active");
+    console.log('webgl renderer active');
     renderer = new THREE.WebGLRenderer({ antialias: true });
   } else {
-    console.log("no webgl renderer, switching to canvasrenderer");
+    console.log('no webgl renderer, switching to canvasrenderer');
     renderer = new THREE.CanvasRenderer();
   }
   var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
@@ -138,7 +138,7 @@ function init() {
 
   // renderer.shadowMap.enabled = true;
   // renderer.shadowMapSoft = true;
-  container = document.getElementById("ThreeJS");
+  container = document.getElementById('ThreeJS');
   container.appendChild(renderer.domElement);
   // CONTROLS
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -148,7 +148,7 @@ function init() {
   var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 
   //see if video is playing, add property
-  Object.defineProperty(HTMLMediaElement.prototype, "playing", {
+  Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
     get: function () {
       return !!(
         this.currentTime > 0 &&
@@ -161,12 +161,12 @@ function init() {
 
   // EVENTS
   THREEx.WindowResize(renderer, camera);
-  THREEx.FullScreen.bindKey({ charCode: "m".charCodeAt(0) });
+  THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
 
   // STATS
   stats = new Stats();
-  stats.domElement.style.position = "absolute";
-  stats.domElement.style.bottom = "0px";
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.bottom = '0px';
   stats.domElement.style.zIndex = 100;
   container.appendChild(stats.domElement);
 
@@ -218,7 +218,7 @@ function init() {
   // posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
   // FLOOR
-  floorTexture = loader.load("Three.js/images/tile-seamless-big.png");
+  floorTexture = loader.load('Three.js/images/tile-seamless-big.png');
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.set(10, 10);
   var floorMaterial = new THREE.MeshStandardMaterial({
@@ -233,13 +233,13 @@ function init() {
   scene.add(floor);
 
   //BG
-  loader.load("Three.js/images/gradient-bg.png", function (texture) {
+  loader.load('Three.js/images/gradient-bg.png', function (texture) {
     scene.background = texture;
   });
 
   //create the cards
   let cardTextures = [];
-  fetch("./json/cardTextures.json")
+  fetch('./json/cardTextures.json')
     .then((response) => response.json())
     .then((data) => createCards(data));
 
@@ -294,10 +294,10 @@ function init() {
       card.rotation.y = 0 * (Math.PI / 180);
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
-      domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
+      domEvents.addEventListener(card, 'click', onDocumentMouseDown, false);
       domEvents.addEventListener(
         card,
-        "touchstart",
+        'touchstart',
         onDocumentMouseDown,
         false
       );
@@ -337,14 +337,14 @@ function init() {
   }
 
   let scrollspeed = 0;
-  document.addEventListener("wheel", (event) => {
+  document.addEventListener('wheel', (event) => {
     scrollspeed = event.deltaY * (Math.PI / 180) * 0.2;
     carrousel.rotation.y += -0.5 * scrollspeed;
     rotation = true;
   });
 
   let prevTouch;
-  document.addEventListener("touchmove", (event) => {
+  document.addEventListener('touchmove', (event) => {
     const TRAVEL_DISTANCE = 0.008;
     const touch = event.touches[0];
     if (!prevTouch) return (prevTouch = touch.clientX);
@@ -383,13 +383,13 @@ function animate(time) {
 }
 
 function update() {
-  if (keyboard.pressed("s")) {
+  if (keyboard.pressed('s')) {
     // stop video
     video.pause();
     video.currentTime = 0;
   }
 
-  if (keyboard.pressed("r"))
+  if (keyboard.pressed('r'))
     // rewind video
     video.currentTime = 0;
 
