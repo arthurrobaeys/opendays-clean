@@ -247,10 +247,15 @@ function init() {
     .then((response) => response.json())
     .then((data) => createCards(data));
 
+<<<<<<< HEAD
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   const createCards = async (data) => {
     for (let i = 0; i < 20; i++) {
+=======
+  const createCards = (data) => {
+    for (let i = 0; i < 10; i++) {
+>>>>>>> bfcff00684c8de923d220a4dcd5958dd7fd07416
       cardGeo = new THREE.PlaneBufferGeometry(108, 192);
 
       const backTexture = new THREE.TextureLoader(loadingManager).load(
@@ -292,7 +297,16 @@ function init() {
       card.lookAt(new THREE.Vector3(0, 140, 0));
       carrousel.add(card);
       domEvents.addEventListener(card, "click", onDocumentMouseDown, false);
+<<<<<<< HEAD
       await sleep(100);
+=======
+      domEvents.addEventListener(
+        card,
+        "touchstart",
+        onDocumentMouseDown,
+        false
+      );
+>>>>>>> bfcff00684c8de923d220a4dcd5958dd7fd07416
     }
   };
 
@@ -335,7 +349,7 @@ function init() {
   });
 
   let prevTouch;
-  document.addEventListener('touchmove', (event) => {
+  document.addEventListener("touchmove", (event) => {
     const TRAVEL_DISTANCE = 0.008;
     const touch = event.touches[0];
     if (!prevTouch) return (prevTouch = touch.clientX);
