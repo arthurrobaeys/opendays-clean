@@ -34,6 +34,7 @@ const labelMusic = document.querySelector('.mute-label');
 // loading screen
 const loadingScreen = document.querySelector('.loadingScreen');
 const continueBtn = document.querySelector('.continue-btn');
+const loadingTxt = document.querySelector('.loading-txt');
 
 //vars for carrousel
 let numOfCards = 30;
@@ -54,12 +55,13 @@ function init() {
   const loadBar = document.querySelector('.loading');
 
   loadingManager.onProgress = function (item, loaded, total) {
-    loadBar.style.width = (loaded / total) * 30 + '%';
+    loadBar.style.width = (loaded / total) * 45 + '%';
   };
 
   loadingManager.onLoad = function () {
     RESOURCES_LOADED = true;
     continueBtn.style.display = 'block';
+    loadingTxt.style.display = 'none';
     continueBtn.addEventListener('click', setDisplayNone);
   };
 
