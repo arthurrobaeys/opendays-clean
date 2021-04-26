@@ -2,7 +2,21 @@
   font-family: sequel;
   src: url(./Three.js/fonts/sequel100wide-55-webfont.ttf);
 }
-
+@font-face {
+  font-family: steradian-l;
+  src: url(./Three.js/fonts/Steradian\ Light.otf);
+  font-weight: lighter;
+}
+@font-face {
+  font-family: steradian-m;
+  src: url(./Three.js/fonts/Steradian\ Medium.otf);
+  font-weight: 700;
+}
+@font-face {
+  font-family: steradian-r;
+  src: url(./Three.js/fonts/Steradian\ Regular.otf);
+  font-weight: 500;
+}
 
 body {
   font-family: sequel;
@@ -45,13 +59,22 @@ body {
   }
 }
 
+@keyframes fadeOutTooltips {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .loadingScreen {
   width: 100%;
   height: 100%;
   margin: 0 auto;
   background-color: black;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,6 +96,13 @@ body {
   animation-fill-mode: forwards;
 }
 
+.fade-out-tool {
+  animation-name: fadeOutTooltips;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
 .topbar-wrapper {
   display: grid;
   grid-template-rows: 1fr;
@@ -83,32 +113,32 @@ body {
 }
 
 .mute-btn {
-  width: 30px;
-  height: 30px;
-  margin-left: 1.5rem;
+  margin-left: 0.8rem;
   cursor: pointer;
 }
 
 .mute-div {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  align-self: center;
-  justify-self: right;
-  margin-right: 2rem;
+  position: absolute;
+  right: 25px;
+  bottom: 20px;
 }
 
 .mute-label {
-  color: white;
+  color: black;
   text-transform: uppercase;
   font-family: sequel;
   font-size: 0.8rem;
 }
 
 .loading {
-  width: 300px;
-  height: 10px;
+  height: 2px;
   background-color: white;
+  border-radius: 50px;
+  max-width: 400px;
+  min-width: 200px;
 }
 
 .NG-bird {
@@ -117,18 +147,24 @@ body {
 }
 
 .continue-btn {
-  background-color: rgb(255, 255, 255);
-  width: max-content;
-  padding: 0.3rem 4rem;
+  border: 1px solid #e9bfa8;
   cursor: pointer;
   display: none;
   margin-top: 2rem;
 }
 
 .continue-txt {
-  color: rgb(0, 0, 0);
-  font-family: sequel;
+  color: #e9bfa8;
+  font-family: steradian-l;
   font-size: 1rem;
+  text-transform: uppercase;
+  padding: 0.7rem 3.5rem;
+  margin: 0;
+}
+
+.continue-btn:hover .continue-txt {
+  background-color: #e9bfa8;
+  color: black;
 }
 
 .ng-logo-ui {
@@ -151,8 +187,75 @@ body {
   text-transform: uppercase;
 }
 
+.ui-pressroom {
+  color: white;
+  font-size: 0.8rem;
+  justify-self: right;
+  margin-right: 2rem;
+  align-self: center;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
 .loading-txt {
   font-family: sequel;
   font-size: 0.9rem;
   color: white;
+}
+
+.tooltips {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: black;
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.tooltip-icon {
+  justify-self: center;
+  align-self: center;
+}
+
+.tooltip-title {
+  color: white;
+  font-size: 1.6rem;
+  font-family: sequel;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.tooltips-wrapper {
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip {
+  color: white;
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+}
+
+.tooltip-txt {
+  font-family: steradian-r;
+}
+
+@media only screen and (max-width: 600px) {
+  .ui-about {
+    margin-left: 1rem;
+  }
+
+  .ui-pressroom {
+    margin-right: 1rem;
+  }
+
+  .mute-div {
+    right: 30px;
+    bottom: 20px;
+  }
 }

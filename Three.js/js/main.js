@@ -29,12 +29,30 @@ var VIEW_ANGLE = 45,
   ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
   NEAR = 0.1,
   FAR = 5000;
+
+const bgMusicLink = 'Three.js/sounds/bgmusic-stranger.mp3';
+const bgMusic = new Audio(bgMusicLink);
+bgMusic.volume = 0.05;
+bgMusic.loop = true;
+
+bgMusic.addEventListener(
+  'ended',
+  function () {
+    this.currentTime = 0;
+    this.play();
+  },
+  false
+);
+
 const labelMusic = document.querySelector('.mute-label');
 
 // loading screen
 const loadingScreen = document.querySelector('.loadingScreen');
 const continueBtn = document.querySelector('.continue-btn');
 const loadingTxt = document.querySelector('.loading-txt');
+
+//tooltips
+const tooltips = document.querySelector('.tooltips');
 
 //vars for carrousel
 let numOfCards = 30;
@@ -43,7 +61,7 @@ let carrouselRadius = 630;
 let isAnimating = false;
 
 const radianInterval = (2 * Math.PI) / numOfCards;
-const centerPoint = { x: 0, y: 100, z: 0 };
+const centerPoint = { x: 0, y: 150, z: 0 };
 
 init();
 animate();
@@ -62,11 +80,18 @@ function init() {
     RESOURCES_LOADED = true;
     continueBtn.style.display = 'block';
     loadingTxt.style.display = 'none';
+    //setDisplayNone();
     continueBtn.addEventListener('click', setDisplayNone);
   };
 
   const setDisplayNone = async (e) => {
     await fadeOut();
+    bgMusic.play();
+    await fadeOutTooltips().then(
+      setTimeout(function () {
+        tooltips.style.display = 'none';
+      }, 4000)
+    );
   };
 
   const fadeOut = async () => {
@@ -76,19 +101,31 @@ function init() {
     }, 1000);
   };
 
+  const fadeOutTooltips = async () => {
+    await setTimeout(function () {
+      tooltips.classList.add('fade-out-tool');
+    }, 3000);
+  };
+
   //UI INTERACTION
-  const mute = document.querySelector('.mute-btn');
+  const muteDiv = document.querySelector('.mute-div');
+  const muteBtn = document.querySelector('.mute-btn');
   const muteLabel = document.querySelector('.mute-label');
-  mute.addEventListener('click', function muteVideo(event) {
-    if (video.muted === true) {
-      video.muted = false;
-      mute.src = 'Three.js/images/music-on.svg';
-      muteLabel.textContent = 'Music on';
-    } else {
-      video.muted = true;
-      mute.classList.remove('muted');
-      mute.src = 'Three.js/images/music-off.svg';
-      muteLabel.textContent = 'Music off';
+
+  muteDiv.addEventListener('click', function (e) {
+    const child = e.target.matches('.mute-btn, .mute-label');
+    if (child) {
+      if (bgMusic.muted == true) {
+        bgMusic.muted = false;
+        muteBtn.src = 'Three.js/images/music-on-black.svg';
+        muteLabel.textContent = 'Music on';
+        return;
+      } else if (bgMusic.muted == false) {
+        bgMusic.muted = true;
+        muteBtn.classList.remove('muted');
+        muteBtn.src = 'Three.js/images/music-off-black.svg';
+        muteLabel.textContent = 'Music off';
+      }
     }
   });
 
@@ -111,10 +148,8 @@ function init() {
 
   // RENDERER
   if (Detector.webgl) {
-    console.log('webgl renderer active');
     renderer = new THREE.WebGLRenderer({ antialias: true });
   } else {
-    console.log('no webgl renderer, switching to canvasrenderer');
     renderer = new THREE.CanvasRenderer();
   }
   var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
@@ -131,7 +166,7 @@ function init() {
   } else if (SCREEN_WIDTH < 900) {
     renderer.setPixelRatio(1.5);
   } else if (SCREEN_WIDTH < 1200) {
-    renderer.setPixelRatio(1);
+    renderer.setPixelRatio(1.3);
   }
 
   window.addEventListener('resize', function () {
@@ -171,11 +206,11 @@ function init() {
   THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
 
   // STATS
-  stats = new Stats();
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.bottom = '0px';
-  stats.domElement.style.zIndex = 100;
-  container.appendChild(stats.domElement);
+  // stats = new Stats();
+  // stats.domElement.style.position = 'absolute';
+  // stats.domElement.style.bottom = '0px';
+  // stats.domElement.style.zIndex = 100;
+  // container.appendChild(stats.domElement);
 
   // LIGHT
 
@@ -275,10 +310,6 @@ function init() {
         renderer.initTexture(frontTexture);
       }
 
-      const normalMap = new THREE.TextureLoader(loadingManager).load(
-        './Three.js/images/paperNormalMap.jpg'
-      );
-
       var frontMaterial = new THREE.MeshStandardMaterial({
         map: frontTexture,
         side: THREE.BackSide,
@@ -286,8 +317,6 @@ function init() {
       var backMaterial = new THREE.MeshStandardMaterial({
         map: backTexture,
         side: THREE.FrontSide,
-        normalMap: normalMap,
-        normalScale: new THREE.Vector2(1.2, 1.2),
       });
 
       card = new THREE.Group();
@@ -320,8 +349,12 @@ function init() {
 
   scene.add(carrousel);
 
-  carrousel.position.set(0, 0, 600);
-  camera.position.set(0, 150, 1500);
+  carrousel.position.set(0, 0, 600); //pos 1
+  camera.position.set(0, 150, 1500); //pos 1
+  //carrousel.rotation.x = -45 * (Math.PI / 180); //pos2
+  //carrousel.position.set(0, 500, 600); //pos2
+  //camera.position.set(0, 1300, 1200); //pos2
+  //camera.rotation.x = -45 * (Math.PI / 180); //pos2
 
   //compile everything
   renderer.compile(scene, camera);
@@ -381,12 +414,66 @@ function init() {
   });
 }
 
+let targetX = 0;
+let targetY = 0;
+let mouseX = 0;
+let mouseY = 0;
+
+const mousePanning = (e) => {
+  const windowX = window.innerWidth / 2;
+  const windowY = window.innerHeight / 2;
+
+  mouseX = e.clientX - windowX;
+  mouseY = e.clientY - windowY;
+  //console.log(mouseX, mouseY)
+};
+
+var isMobile = {
+  Android: function () {
+    return navigator.userAgent.match(/Android/i);
+  },
+  iOS: function () {
+    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  },
+  Windows: function () {
+    return (
+      navigator.userAgent.match(/IEMobile/i) ||
+      navigator.userAgent.match(/WPDesktop/i)
+    );
+  },
+  Opera: function () {
+    return navigator.userAgent.match(/Opera Mini/i);
+  },
+  BlackBerry: function () {
+    return navigator.userAgent.match(/BlackBerry/i);
+  },
+  any: function () {
+    return (
+      isMobile.Android() ||
+      isMobile.BlackBerry() ||
+      isMobile.iOS() ||
+      isMobile.Opera() ||
+      isMobile.Windows()
+    );
+  },
+};
+
+if( isMobile.any() ){
+  console.log("mobile");
+}else{
+  console.log("desktop");
+  document.addEventListener('mousemove', mousePanning);
+}
+
 function animate(time) {
   if (RESOURCES_LOADED == false) {
     requestAnimationFrame(animate);
 
     return;
   }
+
+  targetX = mouseX * 0.001;
+  targetY = mouseY * 0.001;
 
   let sec = time * 0.001;
 
@@ -398,7 +485,13 @@ function animate(time) {
   floorTexture.offset.y -= 0.004;
 
   if (rotation == true) {
-    carrousel.rotation.y += 0.0001;
+    carrousel.rotation.y += 0.00025;
+  }
+
+
+  if( !isMobile.any() ){
+    camera.position.y = 150 + 0.05 * (mouseY - 150);
+    camera.position.x = 0 + 0.05 * mouseX;
   }
 
   requestAnimationFrame(animate);
@@ -419,7 +512,7 @@ function update() {
 
   //controls.update();
   TWEEN.update();
-  stats.update();
+  //stats.update();
 }
 
 function render(time) {
