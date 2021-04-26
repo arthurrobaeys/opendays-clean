@@ -33,6 +33,7 @@ body {
     rgba(49, 82, 244, 1) 0%,
     rgba(133, 187, 255, 1) 100%
   );
+  -webkit-overflow-scrolling: touch;
 }
 
 .ui {

@@ -59,6 +59,7 @@ let numOfCards = 30;
 let carrousel = new THREE.Group();
 let carrouselRadius = 630;
 let isAnimating = false;
+let carrouselMobileRot;
 
 const radianInterval = (2 * Math.PI) / numOfCards;
 const centerPoint = { x: 0, y: 150, z: 0 };
@@ -400,18 +401,18 @@ function init() {
     rotation = true;
   });
 
-  let prevTouch;
-  document.addEventListener('touchmove', (event) => {
-    const TRAVEL_DISTANCE = 0.008;
-    const touch = event.touches[0];
-    if (!prevTouch) return (prevTouch = touch.clientX);
+  // let prevTouch;
+  // document.addEventListener('touchmove', (event) => {
+  //   const TRAVEL_DISTANCE = 0.008;
+  //   const touch = event.touches[0];
+  //   if (!prevTouch) return (prevTouch = touch.clientX);
 
-    if (touch.clientX < prevTouch) carrousel.rotation.y -= TRAVEL_DISTANCE; //go left
-    if (touch.clientX > prevTouch) carrousel.rotation.y += TRAVEL_DISTANCE; //go right
+  //   if (touch.clientX < prevTouch) carrousel.rotation.y -= TRAVEL_DISTANCE; //go left
+  //   if (touch.clientX > prevTouch) carrousel.rotation.y += TRAVEL_DISTANCE; //go right
 
-    prevTouch = touch.clientX;
-    rotation = true;
-  });
+  //   prevTouch = touch.clientX;
+  //   rotation = true;
+  // });
 }
 
 let targetX = 0;
@@ -458,10 +459,28 @@ var isMobile = {
   },
 };
 
-if( isMobile.any() ){
-  console.log("mobile");
-}else{
-  console.log("desktop");
+if (isMobile.any()) {
+  console.log('mobile');
+  let startRot = 0.105;
+  carrousel.rotation.y = startRot;
+  var hammertime = new Hammer(document);
+  hammertime.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
+  hammertime.on('swipe', function (ev) {
+    console.log(ev);
+    if (ev.direction == 4) {
+      carrouselMobileRot = 12 * (Math.PI / 180);
+    } else if (ev.direction == 2) {
+      carrouselMobileRot = -12 * (Math.PI / 180);
+    }
+    var tweenMobile = new TWEEN.Tween(carrousel.rotation)
+      .to({ y: startRot + carrouselMobileRot }, 400)
+      .start();
+    startRot += carrouselMobileRot;
+    tweenMobile.easing(TWEEN.Easing.Cubic.InOut);
+  });
+} else {
+  console.log('desktop');
   document.addEventListener('mousemove', mousePanning);
 }
 
@@ -484,12 +503,13 @@ function animate(time) {
   //floor movement
   floorTexture.offset.y -= 0.004;
 
-  if (rotation == true) {
-    carrousel.rotation.y += 0.00025;
+  if (!isMobile.any()) {
+    if (rotation == true) {
+      carrousel.rotation.y += 0.00025;
+    }
   }
 
-
-  if( !isMobile.any() ){
+  if (!isMobile.any()) {
     camera.position.y = 150 + 0.05 * (mouseY - 150);
     camera.position.x = 0 + 0.05 * mouseX;
   }
