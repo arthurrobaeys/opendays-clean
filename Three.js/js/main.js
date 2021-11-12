@@ -377,7 +377,7 @@ function init() {
     if (!activeCard) return cardSound.pause();
 
     const [key, { index }] = activeCard;
-    cardSound.src = `/Three.js/sounds/cards/${cardData[index].sound}`;
+    cardSound.src = `Three.js/sounds/cards/${cardData[index].sound}`;
     cardSound.play();
   };
 
@@ -429,8 +429,6 @@ function init() {
       if (lastClicked && targetCard !== lastClicked) {
         lastCard = lastClicked;
       }
-
-      console.log(targetCard);
 
       lastCard && rotateCard(lastCard, true);
       rotateCard(targetCard, false);
