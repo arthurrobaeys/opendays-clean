@@ -1,4 +1,5 @@
 // standard global variables
+let cardData = [];
 var container, scene, camera, renderer, controls, stats;
 var keyboard = new THREEx.KeyboardState();
 
@@ -31,8 +32,7 @@ var VIEW_ANGLE = 45,
   NEAR = 0.1,
   FAR = 5000;
 
-const bgMusicLink = 'Three.js/sounds/bg_audio_new.mp3';
-const bgMusic = new Audio(bgMusicLink);
+const bgMusic = new Audio('Three.js/sounds/bg_audio_new.mp3');
 bgMusic.volume = 0.05; //donut forget to turn 0.05
 bgMusic.loop = true;
 
@@ -44,6 +44,8 @@ bgMusic.addEventListener(
   },
   false
 );
+
+const cardSound = new Audio();
 
 const labelMusic = document.querySelector('.mute-label');
 
@@ -293,6 +295,7 @@ function init() {
   const originalCardGeo = new THREE.PlaneBufferGeometry(108, 170);
 
   const createCards = async (data) => {
+    cardData = data;
     for (let i = 0; i < 30; i++) {
       cardGeo = originalCardGeo.clone();
 
@@ -330,6 +333,7 @@ function init() {
       });
 
       card = new THREE.Group();
+      card.index = i;
 
       cardFront = new THREE.Mesh(cardGeo, frontMaterial);
       cardBack = new THREE.Mesh(cardGeo, backMaterial);
@@ -365,6 +369,18 @@ function init() {
   //compile everything
   renderer.compile(scene, camera);
 
+  const handleCardSound = () => {
+    const activeCard = Object.entries(CARD_STATES).find(
+      ([key, { isRotated }]) => isRotated === true
+    );
+
+    if (!activeCard) return cardSound.pause();
+
+    const [key, { index }] = activeCard;
+    cardSound.src = `/Three.js/sounds/cards/${cardData[index].sound}`;
+    cardSound.play();
+  };
+
   //functionalities, events
   async function onDocumentMouseDown(event) {
     const targetCard = event.target;
@@ -382,10 +398,10 @@ function init() {
     isAnimating = true;
 
     const rotateCard = (card, init) => {
-      console.log(CARD_STATES);
       if (!CARD_STATES[card.uuid]) {
         CARD_STATES[card.uuid] = {};
         CARD_STATES[card.uuid].isRotated = null;
+        CARD_STATES[card.uuid].index = card.index;
       }
 
       let rotationY = card.rotation.y + 180 * (Math.PI / 180);
@@ -414,10 +430,14 @@ function init() {
         lastCard = lastClicked;
       }
 
+      console.log(targetCard);
+
       lastCard && rotateCard(lastCard, true);
       rotateCard(targetCard, false);
 
       lastClicked = targetCard;
+
+      handleCardSound();
 
       return;
     }
