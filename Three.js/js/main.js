@@ -21,6 +21,7 @@ var rotation = true,
   playing = false;
 let cardFocus = false;
 let lastClicked = null;
+let lastCard = null;
 let RESOURCES_LOADED = false;
 let LOADING_MANAGER = null;
 var SCREEN_WIDTH = window.innerWidth,
@@ -61,6 +62,8 @@ let carrouselRadius = 630;
 let isAnimating = false;
 let carrouselMobileRot;
 let startRot = 0.105;
+
+const CARD_STATES = {};
 
 const radianInterval = (2 * Math.PI) / numOfCards;
 const centerPoint = { x: 0, y: 150, z: 0 };
@@ -359,20 +362,18 @@ function init() {
   carrousel.position.set(0, 0, 600);
   camera.position.set(0, 150, 1500);
 
-
   //compile everything
   renderer.compile(scene, camera);
 
   //functionalities, events
   async function onDocumentMouseDown(event) {
-    let targetCard = event.target;
-    console.log(targetCard);
+    const targetCard = event.target;
+
     const target = new THREE.Vector3(
       targetCard.position.x,
       targetCard.position.y,
       targetCard.position.z
     );
-    lastClicked = event.target.uuid;
 
     if (isAnimating) {
       return;
@@ -380,18 +381,44 @@ function init() {
 
     isAnimating = true;
 
-    if (
-      lastClicked === targetCard.uuid &&
-      targetCard.getWorldPosition(target).z > 1140
-    ) {
-      let rotationY = targetCard.rotation.y;
+    const rotateCard = (card, init) => {
+      console.log(CARD_STATES);
+      if (!CARD_STATES[card.uuid]) {
+        CARD_STATES[card.uuid] = {};
+        CARD_STATES[card.uuid].isRotated = null;
+      }
+
+      let rotationY = card.rotation.y + 180 * (Math.PI / 180);
+
+      if (init) {
+        if (!CARD_STATES[card.uuid]?.isRotated) {
+          rotationY = card.rotation.y;
+        }
+
+        CARD_STATES[card.uuid].isRotated = false;
+      } else {
+        CARD_STATES[card.uuid].isRotated = !CARD_STATES[card.uuid]?.isRotated;
+      }
+
       rotation = false;
-      rotationY += 180 * (Math.PI / 180);
-      var tweenRot = new TWEEN.Tween(targetCard.rotation)
+
+      var tweenRot = new TWEEN.Tween(card.rotation)
         .to({ y: rotationY }, 500)
         .start()
         .onComplete(() => (isAnimating = false));
       tweenRot.easing(TWEEN.Easing.Quadratic.In);
+    };
+
+    if (targetCard.getWorldPosition(target).z > 1140) {
+      if (lastClicked && targetCard !== lastClicked) {
+        lastCard = lastClicked;
+      }
+
+      lastCard && rotateCard(lastCard, true);
+      rotateCard(targetCard, false);
+
+      lastClicked = targetCard;
+
       return;
     }
 
@@ -400,7 +427,6 @@ function init() {
 
   let scrollspeed = 0;
   document.addEventListener('wheel', (event) => {
-    console.log(event.deltaY);
     scrollspeed = event.deltaY * (Math.PI / 180) * 0.2;
     carrousel.rotation.y += -0.5 * scrollspeed;
     rotation = true;
