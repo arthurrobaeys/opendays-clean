@@ -30,9 +30,9 @@ var VIEW_ANGLE = 45,
   NEAR = 0.1,
   FAR = 5000;
 
-const bgMusicLink = 'Three.js/sounds/bgmusic-stranger.mp3';
+const bgMusicLink = 'Three.js/sounds/bg_audio_new.mp3';
 const bgMusic = new Audio(bgMusicLink);
-bgMusic.volume = 0.05;
+bgMusic.volume = 0.05; //donut forget to turn 0.05
 bgMusic.loop = true;
 
 bgMusic.addEventListener(
@@ -60,6 +60,7 @@ let carrousel = new THREE.Group();
 let carrouselRadius = 630;
 let isAnimating = false;
 let carrouselMobileRot;
+let startRot = 0.105;
 
 const radianInterval = (2 * Math.PI) / numOfCards;
 const centerPoint = { x: 0, y: 150, z: 0 };
@@ -88,11 +89,6 @@ function init() {
   const setDisplayNone = async (e) => {
     await fadeOut();
     bgMusic.play();
-    await fadeOutTooltips().then(
-      setTimeout(function () {
-        tooltips.style.display = 'none';
-      }, 4000)
-    );
   };
 
   const fadeOut = async () => {
@@ -103,10 +99,14 @@ function init() {
   };
 
   const fadeOutTooltips = async () => {
-    await setTimeout(function () {
-      tooltips.classList.add('fade-out-tool');
-    }, 3000);
+    tooltips.classList.add('fade-out-tool');
+    setTimeout(function () {
+      tooltips.style.display = 'none';
+    }, 1000);
   };
+
+  tooltips.addEventListener('touchstart', fadeOutTooltips);
+  tooltips.addEventListener('click', fadeOutTooltips);
 
   //UI INTERACTION
   const muteDiv = document.querySelector('.mute-div');
@@ -118,13 +118,13 @@ function init() {
     if (child) {
       if (bgMusic.muted == true) {
         bgMusic.muted = false;
-        muteBtn.src = 'Three.js/images/music-on-black.svg';
+        muteBtn.src = 'Three.js/images/music-on.svg';
         muteLabel.textContent = 'Music on';
         return;
       } else if (bgMusic.muted == false) {
         bgMusic.muted = true;
         muteBtn.classList.remove('muted');
-        muteBtn.src = 'Three.js/images/music-off-black.svg';
+        muteBtn.src = 'Three.js/images/music-off.svg';
         muteLabel.textContent = 'Music off';
       }
     }
@@ -218,20 +218,24 @@ function init() {
   //const datGui  = new dat.GUI({ autoPlace: true });
   //datGui.domElement.id = 'gui';
 
-  let ambient = new THREE.AmbientLight(0x555555, 1.5);
+  let ambient = new THREE.AmbientLight(0xffffff, 0.2);
   scene.add(ambient);
 
-  var light = new THREE.PointLight(0xffffff, 0.49);
-  light.position.set(0, 5000, -1850);
+  var light = new THREE.PointLight(0xe722c6, 1.0);
+  light.position.set(468, 3612, -306);
 
   let lightTarget = new THREE.Object3D();
   lightTarget.position.set(0, 100, 700);
   scene.add(lightTarget);
 
-  const spotLight = new THREE.SpotLight(0xffffff, 2.14, 1000, Math.PI / 4);
-  spotLight.position.set(0, 91, 2000);
+  const spotLight = new THREE.SpotLight(0xffffff, 2.03, 1000, Math.PI / 4);
+  spotLight.position.set(-175, -306, 1503);
+
+  const spotAmbient = new THREE.SpotLight(0xe722c6, 2.03, 900, Math.PI / 4);
+  spotAmbient.position.set(-175, -306, 1503);
 
   spotLight.target = lightTarget;
+  spotAmbient.target = lightTarget;
 
   spotLight.shadow.mapSize.width = 1024;
   spotLight.shadow.mapSize.height = 1024;
@@ -241,6 +245,7 @@ function init() {
   spotLight.shadow.camera.fov = 45;
 
   scene.add(spotLight);
+  scene.add(spotAmbient);
   scene.add(light);
 
   // var posL = datGui.addFolder('position light');
@@ -255,7 +260,7 @@ function init() {
   //posL2.add(spotLight, 'intensity', 0, 10, 0.01);
 
   // FLOOR
-  floorTexture = loader.load('Three.js/images/tiles-1024.jpg');
+  floorTexture = loader.load('Three.js/images/neon_grid.png');
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.set(10, 10);
   var floorMaterial = new THREE.MeshStandardMaterial({
@@ -270,12 +275,13 @@ function init() {
   scene.add(floor);
 
   //BG
-  loader.load('Three.js/images/gradient-bg.png', function (texture) {
+  loader.load('Three.js/images/bg_neon2.jpg', function (texture) {
     scene.background = texture;
+    scene.fog = new THREE.Fog(0xe722c6, 1000, 2500);
   });
 
   //create the cards
-  fetch('./json/cardTextures-LR.json')
+  fetch('./json/cardTextures-new.json')
     .then((response) => response.json())
     .then((data) => createCards(data));
 
@@ -350,12 +356,9 @@ function init() {
 
   scene.add(carrousel);
 
-  carrousel.position.set(0, 0, 600); //pos 1
-  camera.position.set(0, 150, 1500); //pos 1
-  //carrousel.rotation.x = -45 * (Math.PI / 180); //pos2
-  //carrousel.position.set(0, 500, 600); //pos2
-  //camera.position.set(0, 1300, 1200); //pos2
-  //camera.rotation.x = -45 * (Math.PI / 180); //pos2
+  carrousel.position.set(0, 0, 600);
+  camera.position.set(0, 150, 1500);
+
 
   //compile everything
   renderer.compile(scene, camera);
@@ -363,6 +366,7 @@ function init() {
   //functionalities, events
   async function onDocumentMouseDown(event) {
     let targetCard = event.target;
+    console.log(targetCard);
     const target = new THREE.Vector3(
       targetCard.position.x,
       targetCard.position.y,
@@ -396,6 +400,7 @@ function init() {
 
   let scrollspeed = 0;
   document.addEventListener('wheel', (event) => {
+    console.log(event.deltaY);
     scrollspeed = event.deltaY * (Math.PI / 180) * 0.2;
     carrousel.rotation.y += -0.5 * scrollspeed;
     rotation = true;
@@ -426,7 +431,6 @@ const mousePanning = (e) => {
 
   mouseX = e.clientX - windowX;
   mouseY = e.clientY - windowY;
-  //console.log(mouseX, mouseY)
 };
 
 var isMobile = {
@@ -459,15 +463,20 @@ var isMobile = {
   },
 };
 
+//specific mobile interactions
 if (isMobile.any()) {
-  console.log('mobile');
-  let startRot = 0.105;
   carrousel.rotation.y = startRot;
+
+  let tapText = document.querySelector('.tap-txt');
+  let swipeText = document.querySelector('.swipe-txt');
+
+  tapText.textContent = 'Tap once to flip a card';
+  swipeText.textContent = 'Swipe to navigate through the cards';
+
   var hammertime = new Hammer(document);
   hammertime.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
   hammertime.on('swipe', function (ev) {
-    console.log(ev);
     if (ev.direction == 4) {
       carrouselMobileRot = 12 * (Math.PI / 180);
     } else if (ev.direction == 2) {
@@ -480,9 +489,20 @@ if (isMobile.any()) {
     tweenMobile.easing(TWEEN.Easing.Cubic.InOut);
   });
 } else {
-  console.log('desktop');
   document.addEventListener('mousemove', mousePanning);
 }
+
+document.addEventListener('keypress', function onEvent(event) {
+  if (event.code === 'Space') {
+    carrouselMobileRot = 12 * (Math.PI / 180);
+
+    var tweenMobile = new TWEEN.Tween(carrousel.rotation)
+      .to({ y: startRot + carrouselMobileRot }, 400)
+      .start();
+    startRot += carrouselMobileRot;
+    tweenMobile.easing(TWEEN.Easing.Cubic.InOut);
+  }
+});
 
 function animate(time) {
   if (RESOURCES_LOADED == false) {
@@ -502,12 +522,6 @@ function animate(time) {
 
   //floor movement
   floorTexture.offset.y -= 0.004;
-
-  if (!isMobile.any()) {
-    if (rotation == true) {
-      carrousel.rotation.y += 0.00025;
-    }
-  }
 
   if (!isMobile.any()) {
     camera.position.y = 150 + 0.05 * (mouseY - 150);

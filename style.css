@@ -128,7 +128,7 @@ body {
 }
 
 .mute-label {
-  color: black;
+  color: white;
   text-transform: uppercase;
   font-family: sequel;
   font-size: 0.8rem;
@@ -143,7 +143,8 @@ body {
 }
 
 .NG-bird {
-  width: 70px;
+  height: 70px;
+  width: auto;
   margin-bottom: 2rem;
 }
 
@@ -165,11 +166,11 @@ body {
 
 .continue-btn:hover .continue-txt {
   background-color: #e9bfa8;
-  color: black;
+  color: white;
 }
 
 .ng-logo-ui {
-  width: 45px;
+  width: auto;
   height: 45px;
 }
 
@@ -196,6 +197,23 @@ body {
   align-self: center;
   text-transform: uppercase;
   text-decoration: none;
+}
+
+.ui-tiktok {
+  color: white;
+  font-size: 0.8rem;
+  justify-self: right;
+  margin-right: 2rem;
+  align-self: center;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.ui-links-wrapper {
+  width: max-content;
+  align-self: right;
+  display: flex;
+  justify-self: flex-end;
 }
 
 .loading-txt {
