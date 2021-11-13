@@ -33,7 +33,7 @@ var VIEW_ANGLE = 45,
   FAR = 5000;
 
 const bgMusic = new Audio('Three.js/sounds/bg_audio_new.mp3');
-bgMusic.volume = 0.05; //donut forget to turn 0.05
+bgMusic.volume = 0.035; //donut forget to turn 0.05
 bgMusic.loop = true;
 
 bgMusic.addEventListener(
@@ -46,6 +46,7 @@ bgMusic.addEventListener(
 );
 
 const cardSound = new Audio();
+cardSound.volume = 0.1;
 
 const labelMusic = document.querySelector('.mute-label');
 
@@ -449,19 +450,6 @@ function init() {
     carrousel.rotation.y += -0.5 * scrollspeed;
     rotation = true;
   });
-
-  // let prevTouch;
-  // document.addEventListener('touchmove', (event) => {
-  //   const TRAVEL_DISTANCE = 0.008;
-  //   const touch = event.touches[0];
-  //   if (!prevTouch) return (prevTouch = touch.clientX);
-
-  //   if (touch.clientX < prevTouch) carrousel.rotation.y -= TRAVEL_DISTANCE; //go left
-  //   if (touch.clientX > prevTouch) carrousel.rotation.y += TRAVEL_DISTANCE; //go right
-
-  //   prevTouch = touch.clientX;
-  //   rotation = true;
-  // });
 }
 
 let targetX = 0;

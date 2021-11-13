@@ -136,7 +136,7 @@ body {
 
 .loading {
   height: 2px;
-  background-color: white;
+  background-color: #cd6474;
   border-radius: 50px;
   max-width: 400px;
   min-width: 200px;
@@ -149,14 +149,14 @@ body {
 }
 
 .continue-btn {
-  border: 1px solid #e9bfa8;
+  border: 1px solid #cd6474;
   cursor: pointer;
   display: none;
   margin-top: 2rem;
 }
 
 .continue-txt {
-  color: #e9bfa8;
+  color: #cd6474;
   font-family: steradian-l;
   font-size: 1rem;
   text-transform: uppercase;
@@ -165,7 +165,7 @@ body {
 }
 
 .continue-btn:hover .continue-txt {
-  background-color: #e9bfa8;
+  background-color: #cd6474;
   color: white;
 }
 
@@ -199,15 +199,17 @@ body {
   text-decoration: none;
 }
 
-.ui-tiktok {
-  color: white;
-  font-size: 0.8rem;
-  justify-self: right;
-  margin-right: 2rem;
-  align-self: center;
-  text-transform: uppercase;
-  text-decoration: none;
+.link_margin {
+  margin-right: 1rem;
 }
+
+.bottom-links{
+  display: flex;
+  position: absolute;
+  bottom: 20px;
+  left: 25px;
+}
+
 
 .ui-links-wrapper {
   width: max-content;
