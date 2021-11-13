@@ -46,7 +46,7 @@ bgMusic.addEventListener(
 );
 
 const cardSound = new Audio();
-cardSound.volume = 0.1;
+cardSound.volume = 0.5;
 
 const labelMusic = document.querySelector('.mute-label');
 
