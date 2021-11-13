@@ -281,7 +281,7 @@ function init() {
   scene.add(floor);
 
   //BG
-  loader.load('Three.js/images/bg_neon2.jpg', function (texture) {
+  loader.load('Three.js/images/bg_neon2.webp', function (texture) {
     scene.background = texture;
     scene.fog = new THREE.Fog(0xe722c6, 1000, 2500);
   });
