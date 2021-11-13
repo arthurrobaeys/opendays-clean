@@ -64,7 +64,7 @@ let carrousel = new THREE.Group();
 let carrouselRadius = 630;
 let isAnimating = false;
 let carrouselMobileRot;
-let startRot = 0.105;
+let startRot = -1.570; //0.105 
 
 const CARD_STATES = {};
 
@@ -496,8 +496,8 @@ var isMobile = {
 };
 
 //specific mobile interactions
+carrousel.rotation.y = startRot;
 if (isMobile.any()) {
-  carrousel.rotation.y = startRot;
 
   let tapText = document.querySelector('.tap-txt');
   let swipeText = document.querySelector('.swipe-txt');
