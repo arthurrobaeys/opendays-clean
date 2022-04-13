@@ -77,28 +77,25 @@ animate();
 
 // FUNCTIONS
 function init() {
-  loadingManager = new THREE.LoadingManager();
+  const onLoad = () => {
+    RESOURCES_LOADED = true;
+
+    continueBtn.style.display = 'block';
+    loadingTxt.style.display = 'none';
+
+    continueBtn.addEventListener('click', setDisplayNone);
+  };
 
   const loadBar = document.querySelector('.loading');
 
-  loadingManager.onProgress = function (item, loaded, total) {
+  const loadingManager = new THREE.LoadingManager(onLoad);
+
+  loadingManager.onStart = (_, loaded, total) => {
     if (loadingLogo) {
       loadingLogo.play();
     }
 
     loadBar.style.width = (loaded / total) * 45 + '%';
-  };
-
-  loadingManager.onLoad = function () {
-    RESOURCES_LOADED = true;
-    if (RESOURCES_LOADED) {
-      loadingLogo.pause();
-      loadingLogo.currentTime = 0;
-    }
-    continueBtn.style.display = 'block';
-    loadingTxt.style.display = 'none';
-    //setDisplayNone();
-    continueBtn.addEventListener('click', setDisplayNone);
   };
 
   const setDisplayNone = async (e) => {
