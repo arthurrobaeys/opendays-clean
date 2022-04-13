@@ -136,27 +136,27 @@ body {
 
 .loading {
   height: 2px;
-  background-color: #cd6474;
+  background-color: #ffffff;
   border-radius: 50px;
   max-width: 400px;
   min-width: 200px;
 }
 
 .NG-bird {
-  height: 70px;
+  height: 400px;
   width: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .continue-btn {
-  border: 1px solid #cd6474;
+  border: 1px solid #ffffff;
   cursor: pointer;
   display: none;
   margin-top: 2rem;
 }
 
 .continue-txt {
-  color: #cd6474;
+  color: #ffffff;
   font-family: steradian-l;
   font-size: 1rem;
   text-transform: uppercase;
@@ -165,13 +165,13 @@ body {
 }
 
 .continue-btn:hover .continue-txt {
-  background-color: #cd6474;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
 }
 
 .ng-logo-ui {
   width: auto;
-  height: 45px;
+  height: 50px;
 }
 
 .ng-logo-link {

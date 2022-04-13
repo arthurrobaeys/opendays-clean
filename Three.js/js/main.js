@@ -32,7 +32,7 @@ var VIEW_ANGLE = 45,
   NEAR = 0.1,
   FAR = 5000;
 
-const bgMusic = new Audio('Three.js/sounds/bg_audio_new.mp3');
+const bgMusic = new Audio('Three.js/sounds/NG_bg_music_Meta.mp3');
 bgMusic.volume = 0.035; //donut forget to turn 0.05
 bgMusic.loop = true;
 
@@ -54,6 +54,7 @@ const labelMusic = document.querySelector('.mute-label');
 const loadingScreen = document.querySelector('.loadingScreen');
 const continueBtn = document.querySelector('.continue-btn');
 const loadingTxt = document.querySelector('.loading-txt');
+const loadingLogo = document.querySelector('.NG-bird');
 
 //tooltips
 const tooltips = document.querySelector('.tooltips');
@@ -64,7 +65,7 @@ let carrousel = new THREE.Group();
 let carrouselRadius = 630;
 let isAnimating = false;
 let carrouselMobileRot;
-let startRot = -1.570; //0.105 
+let startRot = -1.57; //0.105
 
 const CARD_STATES = {};
 
@@ -81,11 +82,19 @@ function init() {
   const loadBar = document.querySelector('.loading');
 
   loadingManager.onProgress = function (item, loaded, total) {
+    if (loadingLogo) {
+      loadingLogo.play();
+    }
+
     loadBar.style.width = (loaded / total) * 45 + '%';
   };
 
   loadingManager.onLoad = function () {
     RESOURCES_LOADED = true;
+    if (RESOURCES_LOADED) {
+      loadingLogo.pause();
+      loadingLogo.currentTime = 0;
+    }
     continueBtn.style.display = 'block';
     loadingTxt.style.display = 'none';
     //setDisplayNone();
@@ -281,7 +290,7 @@ function init() {
   scene.add(floor);
 
   //BG
-  loader.load('Three.js/images/bg_neon2.webp', function (texture) {
+  loader.load('Three.js/images/bg_tron.jpg', function (texture) {
     scene.background = texture;
     scene.fog = new THREE.Fog(0xe722c6, 1000, 2500);
   });
@@ -498,7 +507,6 @@ var isMobile = {
 //specific mobile interactions
 carrousel.rotation.y = startRot;
 if (isMobile.any()) {
-
   let tapText = document.querySelector('.tap-txt');
   let swipeText = document.querySelector('.swipe-txt');
 
