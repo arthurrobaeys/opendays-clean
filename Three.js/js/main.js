@@ -45,9 +45,6 @@ bgMusic.addEventListener(
   false
 );
 
-const cardSound = new Audio();
-cardSound.volume = 0.5;
-
 const labelMusic = document.querySelector('.mute-label');
 
 // loading screen
@@ -218,36 +215,38 @@ function init() {
   THREEx.WindowResize(renderer, camera);
   THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
 
-  // STATS
-  // stats = new Stats();
-  // stats.domElement.style.position = 'absolute';
-  // stats.domElement.style.bottom = '0px';
-  // stats.domElement.style.zIndex = 100;
-  // container.appendChild(stats.domElement);
+  //
 
-  // LIGHT
+  //  //STATS
+  //  stats = new Stats();
+  //  stats.domElement.style.position = 'absolute';
+  //  stats.domElement.style.bottom = '0px';
+  //  stats.domElement.style.zIndex = 100;
+  //  container.appendChild(stats.domElement)
+  // // LIGHT
+  // const datGui  = new dat.GUI({ autoPlace: true });
+  // datGui.domElement.id = 'gui';
 
-  //const datGui  = new dat.GUI({ autoPlace: true });
-  //datGui.domElement.id = 'gui';
+  //
 
-  let ambient = new THREE.AmbientLight(0xffffff, 0.2);
+  let ambient = new THREE.AmbientLight(0x002970, 0.2);
   scene.add(ambient);
 
-  var light = new THREE.PointLight(0xe722c6, 1.0);
+  var light = new THREE.PointLight(0x002970, 1.0);
   light.position.set(468, 3612, -306);
 
   let lightTarget = new THREE.Object3D();
   lightTarget.position.set(0, 100, 700);
   scene.add(lightTarget);
 
-  const spotLight = new THREE.SpotLight(0xffffff, 2.03, 1000, Math.PI / 4);
-  spotLight.position.set(-175, -306, 1503);
+  const spotLight = new THREE.SpotLight(0xffffff, 4.79, 1000, Math.PI / 4);
+  spotLight.position.set(68, 665, 1767);
 
-  const spotAmbient = new THREE.SpotLight(0xe722c6, 2.03, 900, Math.PI / 4);
-  spotAmbient.position.set(-175, -306, 1503);
+  // const spotAmbient = new THREE.SpotLight(0xffffff, 2.03, 900, Math.PI / 4);
+  // spotAmbient.position.set(-175, -306, 1503);
 
   spotLight.target = lightTarget;
-  spotAmbient.target = lightTarget;
+  // spotAmbient.target = lightTarget;
 
   spotLight.shadow.mapSize.width = 1024;
   spotLight.shadow.mapSize.height = 1024;
@@ -257,8 +256,10 @@ function init() {
   spotLight.shadow.camera.fov = 45;
 
   scene.add(spotLight);
-  scene.add(spotAmbient);
+  // scene.add(spotAmbient);
   scene.add(light);
+
+  //
 
   // var posL = datGui.addFolder('position light');
   //posL.add(light.position, 'x', 0, 1000);
@@ -270,6 +271,8 @@ function init() {
   //posL2.add(spotLight.position, 'y', -2000, 2000);
   //posL2.add(spotLight.position, 'z', -2000, 2000);
   //posL2.add(spotLight, 'intensity', 0, 10, 0.01);
+
+  //
 
   // FLOOR
   floorTexture = loader.load('Three.js/images/neon_grid.png');
@@ -287,9 +290,9 @@ function init() {
   scene.add(floor);
 
   //BG
-  loader.load('Three.js/images/bg_tron.jpg', function (texture) {
+  loader.load('Three.js/images/achtergrond_meta2.jpg', function (texture) {
     scene.background = texture;
-    scene.fog = new THREE.Fog(0xe722c6, 1000, 2500);
+    scene.fog = new THREE.Fog(0x002970, 1000, 2500);
   });
 
   //create the cards
@@ -376,18 +379,6 @@ function init() {
   //compile everything
   renderer.compile(scene, camera);
 
-  const handleCardSound = () => {
-    const activeCard = Object.entries(CARD_STATES).find(
-      ([key, { isRotated }]) => isRotated === true
-    );
-
-    if (!activeCard) return cardSound.pause();
-
-    const [key, { index }] = activeCard;
-    cardSound.src = `Three.js/sounds/cards/${cardData[index].sound}`;
-    cardSound.play();
-  };
-
   //functionalities, events
   async function onDocumentMouseDown(event) {
     const targetCard = event.target;
@@ -441,8 +432,6 @@ function init() {
       rotateCard(targetCard, false);
 
       lastClicked = targetCard;
-
-      handleCardSound();
 
       return;
     }

@@ -1,182 +1,192 @@
 [
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_2021.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_20212.webp",
-    "sound": "0-INTRO.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_2.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_20213.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_20214.webp",
-    "sound": "10-HNST_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_3.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_4.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_20215.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_20216.webp",
-    "sound": "1-HER_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_5.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_6.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_20217.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_20218.webp",
-    "sound": "2-VILA_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_7.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_8.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_20219.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202110.webp",
-    "sound": "3-VEROMODA_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_9.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_10.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202111.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202112.webp",
-    "sound": "4-YAS_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_11.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_12.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202113.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202114.webp",
-    "sound": "5-JACK&JONES_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_13.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_14.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202115.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202116.webp",
-    "sound": "6-JJXX_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_15.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_16.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202117.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202118.webp",
-    "sound": "8-SLFEMME_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_17.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_18.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202119.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202120.webp",
-    "sound": "9-SLHOMME_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_19.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_20.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202121.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202122.webp",
-    "sound": "7-OBJECT_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_21.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_22.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202123.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202124.webp",
-    "sound": "12-SHEIN_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_23.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_24.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202125.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202126.webp",
-    "sound": "11-DRYKORN_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_25.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_26.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202127.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202128.webp",
-    "sound": "13-ARTUUR_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_27.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_28.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202129.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202130.webp",
-    "sound": "15-VESPA_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_29.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_30.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202131.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202132.webp",
-    "sound": "16-PIAGGIO_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_31.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_32.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202133.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202134.webp",
-    "sound": "17-MOTOGUZZI_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_33.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_34.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202135.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202136.webp",
-    "sound": "18-APRILIA_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_35.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_36.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202137.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202138.webp",
-    "sound": "25-LYRES_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_37.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_38.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202139.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202140.webp",
-    "sound": "26-VINTENSE_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_39.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_40.webp" 
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202141.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202142.webp",
-    "sound": "21-MUBLO_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_41.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_42.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202143.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202144.webp",
-    "sound": "22-RENAULAC_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_43.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_44.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202145.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202146.webp",
-    "sound": "19-TECHNOGYM_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_45.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_46.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202147.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202148.webp",
-    "sound": "23-CO_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_47.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_48.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202149.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202150.webp",
-    "sound": "27-DONPAPA_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_49.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_50.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202151.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202152.webp",
-    "sound": "24-YUST_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_51.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_52.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202153.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202154.webp",
-    "sound": "14-HEDGREN_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_53.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_54.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202155.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202156.webp",
-    "sound": "28-JOYT_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_55.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_56.webp"
   },
   {
     "client": "NL",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202157.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202158.webp",
-    "sound": "20-ANNIEWHERE_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_57.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_58.webp"
   },
   {
     "client": "BE",
-    "front": "Three.js/images/frontsides_new/NG_Cards_v3_Digital_202159.jpg",
-    "back": "Three.js/images/backsides_new/NG_Cards_v3_Digital_202160.webp",
-    "sound": "29-KOMONO_CROP.mp3"
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_59.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_60.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_61.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_62.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_63.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_64.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_65.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_66.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_67.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_68.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_69.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_70.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_71.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_72.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_73.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_74.webp"
+  },
+  {
+    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_75.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_76.webp"
   }
 ]
