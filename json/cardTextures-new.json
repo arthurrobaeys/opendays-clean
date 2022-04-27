@@ -1,192 +1,154 @@
 [
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_2.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_3.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_4.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_5.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_6.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_7.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_8.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_9.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_10.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_11.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_12.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_13.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_14.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_15.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_16.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_17.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_18.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_19.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_20.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_21.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_22.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_23.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_24.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_25.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_26.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_27.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_28.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_29.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_30.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_31.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_32.webp"
   },
   {
-    "client": "BE",
+    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_75.webp",
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_76.webp"
+  },
+  {
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_33.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_34.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_35.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_36.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_37.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_38.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_39.webp",
-    "back": "Three.js/images/backside/NG_Cards_Digital_2022_40.webp" 
+    "back": "Three.js/images/backside/NG_Cards_Digital_2022_40.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_41.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_42.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_43.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_44.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_45.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_46.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_47.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_48.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_49.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_50.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_51.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_52.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_53.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_54.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_55.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_56.webp"
   },
   {
-    "client": "NL",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_57.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_58.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_59.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_60.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_61.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_62.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_63.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_64.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_65.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_66.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_67.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_68.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_69.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_70.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_71.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_72.webp"
   },
   {
-    "client": "BE",
     "front": "Three.js/images/frontside/NG_Cards_Digital_2022_73.webp",
     "back": "Three.js/images/backside/NG_Cards_Digital_2022_74.webp"
-  },
-  {
-    "client": "BE",
-    "front": "Three.js/images/frontside/NG_Cards_Digital_2022_75.webp",
-    "back": "Three.js/images/backside/NG_Cards_Digital_2022_76.webp"
   }
 ]
